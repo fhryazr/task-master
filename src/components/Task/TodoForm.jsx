@@ -15,12 +15,12 @@ export const TodoForm = ({ addTodo }) => {
     }
   };
   return (
-    <form onSubmit={handleSubmit} className="TodoForm flex w-[50rem] gap-4">
+    <form onSubmit={handleSubmit} className="TodoForm flex w-[80vw] gap-4 mb-4">
       <input
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="todo-input w-full rounded-lg px-5"
+        className="todo-input w-full rounded-lg px-8"
         placeholder="What is the task today?"
       />
       <button type="submit" className="todo-btn text-3xl px-4 py-1 bg-purple-900 text-white rounded-lg">
