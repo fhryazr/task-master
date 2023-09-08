@@ -19,23 +19,6 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.TodoList {
-  background: #1A1A40;
-  margin-top: 1rem;
-  padding: 2rem;
-  border-radius: 5px;
-}
-
-.TodoForm {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.Todo {
-  cursor: pointer;
-  height: 4rem;
-}
-
 .completed {
   color: #c5aeff;
   text-decoration: line-through;
