@@ -12,16 +12,16 @@ export const EditTodoForm = ({ editTodo, task }) => {
     editTodo(value, task.id);
   };
   return (
-    <form onSubmit={handleSubmit} className="TodoForm flex w-[50rem] gap-4 h-10">
+    <form onSubmit={handleSubmit} className="TodoForm flex h-12 mb-4 mt-4 rounded-lg drop-shadow-md gap-4">
       <input
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        className="todo-input w-full rounded-lg px-5"
+        className="todo-input w-full rounded-lg px-8"
         placeholder="Update task"
       />
       <button type="submit" className="todo-btn px-4 py-1 bg-purple-900 text-white rounded-lg">
-        Edit
+        Save
       </button>
     </form>
   );

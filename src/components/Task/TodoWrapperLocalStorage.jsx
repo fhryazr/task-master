@@ -52,7 +52,7 @@ export const TodoWrapperLocalStorage = () => {
     localStorage.setItem("todos", JSON.stringify(newTodos));
   };
   return (
-    <div className="TodoWrapper bg-slate-500">
+    <div className="TodoWrapper w-[80vw]">
       <h1 className="mb-2 font-semibold text-xl text-white">Task Today</h1>
       <TodoForm addTodo={addTodo} />
       <div className="TodoList bg-slate-100 px-8 py-2 rounded-md">
