@@ -7,10 +7,15 @@ uuidv4();
 
 export const TodoWrapperLocalStorage = () => {
   const [todos, setTodos] = useState([]);
+  const [completedTodos, setCompletedTodos] = useState(0); // State untuk tugas yang sudah selesai
 
   useEffect(() => {
     const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
     setTodos(savedTodos);
+
+    // Hitung jumlah tugas yang sudah selesai saat komponen pertama kali dimuat
+    const completedCount = savedTodos.filter((todo) => todo.completed).length;
+    setCompletedTodos(completedCount);
   }, []);
 
   const addTodo = (todo) => {
@@ -28,12 +33,20 @@ export const TodoWrapperLocalStorage = () => {
     );
     setTodos(newTodos);
     localStorage.setItem("todos", JSON.stringify(newTodos));
+
+    // Hitung ulang jumlah tugas yang sudah selesai setiap kali ada perubahan
+    const completedCount = newTodos.filter((todo) => todo.completed).length;
+    setCompletedTodos(completedCount);
   };
 
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
     localStorage.setItem("todos", JSON.stringify(newTodos));
+
+    // Hitung ulang jumlah tugas yang sudah selesai setelah menghapus tugas
+    const completedCount = newTodos.filter((todo) => todo.completed).length;
+    setCompletedTodos(completedCount);
   };
 
   const editTodo = (id) => {
@@ -51,6 +64,16 @@ export const TodoWrapperLocalStorage = () => {
     setTodos(newTodos);
     localStorage.setItem("todos", JSON.stringify(newTodos));
   };
+
+  const clearCompleted = () => {
+    if (completedTodos === 0) {
+      alert("belum ada tugas yang selesai")
+    }
+    const unclearTodos = todos.filter((todo) => !todo.completed);
+    setTodos(unclearTodos);
+    localStorage.setItem("todos", JSON.stringify(unclearTodos));
+    setCompletedTodos(0);
+  }
   return (
     <div className="TodoWrapper w-[50vw]">
       <h1 className="mb-2 font-semibold text-xl text-white">Task Today</h1>
@@ -75,9 +98,10 @@ export const TodoWrapperLocalStorage = () => {
             )
           )}
         </div>
-        <div className="flex justify-between text-gray-500 cursor-default">
-          <span>{todos.length} task left</span>
-          <span className="cursor-pointer text-black">Clear Completed</span>
+        <div className="flex justify-between text-gray-400 cursor-default">
+          <span>{Math.max(todos.length - completedTodos, 0)} task left</span>
+          <span>{Math.max(completedTodos, 0)} Completed</span>
+          <span className="cursor-pointer text-black" onClick={clearCompleted}>Clear Completed</span>
         </div>
       </div>
     </div>
