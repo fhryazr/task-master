@@ -52,23 +52,33 @@ export const TodoWrapperLocalStorage = () => {
     localStorage.setItem("todos", JSON.stringify(newTodos));
   };
   return (
-    <div className="TodoWrapper w-[80vw]">
+    <div className="TodoWrapper w-[50vw]">
       <h1 className="mb-2 font-semibold text-xl text-white">Task Today</h1>
       <TodoForm addTodo={addTodo} />
-      <div className="TodoList bg-slate-100 px-8 py-2 rounded-md">
-      {todos.map((todo) =>
-        todo.isEditing ? (
-          <EditTodoForm key={todo.id} editTodo={editTask} task={todo} />
-        ) : (
-          <Todo
-            task={todo}
-            key={todo.id}
-            toggleComplete={toggleComplete}
-            deleteTodo={deleteTodo}
-            editTodo={editTodo}
-          />
-        )
-      )}
+      <div className="TodoList bg-slate-100 px-3 pb-2 rounded-md">
+        <div className="h-[30vh] px-2 py-2 overflow-y-auto">
+          {todos.length === 0 ? (
+            <h1 className="flex h-full justify-center items-center text-xl text-gray-400">No Task For Today</h1>
+          ) : (
+            todos.map((todo) =>
+              todo.isEditing ? (
+                <EditTodoForm key={todo.id} editTodo={editTask} task={todo} />
+              ) : (
+                <Todo
+                  task={todo}
+                  key={todo.id}
+                  toggleComplete={toggleComplete}
+                  deleteTodo={deleteTodo}
+                  editTodo={editTodo}
+                />
+              )
+            )
+          )}
+        </div>
+        <div className="flex justify-between text-gray-500 cursor-default">
+          <span>2 task left</span>
+          <span className="cursor-pointer text-black">Clear Completed</span>
+        </div>
       </div>
     </div>
   );
