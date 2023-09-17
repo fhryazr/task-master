@@ -76,7 +76,7 @@ export const TodoWrapperLocalStorage = () => {
           )}
         </div>
         <div className="flex justify-between text-gray-500 cursor-default">
-          <span>2 task left</span>
+          <span>{todos.length} task left</span>
           <span className="cursor-pointer text-black">Clear Completed</span>
         </div>
       </div>

@@ -20,7 +20,7 @@ body {
 }
 
 .completed {
-  color: #c5aeff;
+  color: rgb(178, 178, 178);
   text-decoration: line-through;
   text-decoration-thickness: 2px;
 }
