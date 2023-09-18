@@ -82,13 +82,13 @@ export const TodoWrapperLocalStorage = () => {
   // Fungsi untuk menghapus tugas yang sudah selesai
   const clearCompleted = () => {
     if (completedTodos === 0) {
-      alert("belum ada tugas yang selesai")
+      alert("belum ada tugas yang selesai");
     }
     const unclearTodos = todos.filter((todo) => !todo.completed);
     setTodos(unclearTodos);
     saveTodosToLocalStorage(unclearTodos);
     setCompletedTodos(0);
-  }
+  };
   
   return (
     <div className="TodoWrapper container w-[95vw] sm:w-[70vw] lg:w-[50vw]">
@@ -97,7 +97,9 @@ export const TodoWrapperLocalStorage = () => {
       <div className="TodoList bg-slate-100 px-3 pb-2 rounded-md drop-shadow-lg">
         <div className="h-[30vh] px-2 py-2 overflow-y-auto">
           {todos.length === 0 ? (
-            <h1 className="flex h-full justify-center items-center text-xl text-gray-400">No Task For Today</h1>
+            <h1 className="flex h-full justify-center items-center text-xl text-gray-400">
+              No Task For Today
+            </h1>
           ) : (
             todos.map((todo) =>
               todo.isEditing ? (

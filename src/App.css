@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
   margin: 0;
@@ -16,7 +15,7 @@ body {
 
 .App {
   height: 100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .completed {
@@ -25,3 +24,9 @@ body {
   text-decoration-thickness: 2px;
 }
 
+.left-top {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 130px;
+}
