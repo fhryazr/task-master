@@ -1,0 +1,58 @@
+/* Timer.css */
+
+.Timer {
+  width: 400px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+}
+
+.timer-display {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.timer-controls button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.timer-controls button:hover {
+  background-color: #0056b3;
+}
+
+.mode-buttons {
+  display: flex;
+  justify-content: space-around; /* Menambahkan jarak antara tombol-tombol */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: rgb(182, 182, 182);
+}
+
+.mode-buttons button.active {
+  color: #fff; /* Ganti dengan warna yang Anda inginkan saat tombol aktif */
+}
+
+/* Gaya untuk tombol yang dinonaktifkan */
+button:disabled {
+  background-color: #ccc; /* Warna latar belakang abu-abu */
+  color: #999; /* Warna teks abu-abu yang lebih muda */
+  cursor: not-allowed; /* Ubah ikon kursor menjadi "not-allowed" */
+  opacity: 0.6; /* Opasitas yang lebih rendah untuk menunjukkan tombol dinonaktifkan */
+}
