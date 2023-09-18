@@ -23,7 +23,7 @@ const Timer = ({ mode, duration, setCurrentMode, seconds_duration }) => {
   };
 
   return (
-    <div className="Timer">
+    <div className="Timer w-[95vw] sm:w-[60vw] lg:w-[30vw] xl:w-[22vw]">
       {mode === "focus" && (
         <>
           <Focus
