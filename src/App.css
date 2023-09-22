@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 * {
   margin: 0;
@@ -8,7 +7,7 @@
 }
 
 body {
-  background: linear-gradient(243deg, #04D2FF 0%, #A609F0 100%);
+  /* background: linear-gradient(243deg, #04D2FF 0%, #A609F0 100%); */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,12 +15,18 @@ body {
 
 .App {
   height: 100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .completed {
-  color: #c5aeff;
+  color: rgb(178, 178, 178);
   text-decoration: line-through;
   text-decoration-thickness: 2px;
 }
 
+.left-top {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 130px;
+}
