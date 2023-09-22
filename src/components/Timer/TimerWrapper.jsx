@@ -8,18 +8,18 @@ const TimerWrapper = () => {
   const modes = {
     focus: {
       label: "Focus",
-      duration: 0, // Durasi mode Focus dalam menit
-      seconds_duration: 5,
+      duration: 25, // Durasi mode Focus dalam menit
+      seconds_duration: 0,
     },
     shortBreak: {
       label: "Short Break",
-      duration: 0,
-      seconds_duration: 2, // Durasi mode Short Break dalam menit
+      duration: 5,
+      seconds_duration: 0, // Durasi mode Short Break dalam menit
     },
     longBreak: {
       label: "Long Break",
-      duration: 0, // Durasi mode Long Break dalam menit
-      seconds_duration: 3,
+      duration: 15, // Durasi mode Long Break dalam menit
+      seconds_duration: 0,
     },
   };
 
@@ -34,11 +34,11 @@ const TimerWrapper = () => {
 
   // Logika untuk mengatur mode selanjutnya berdasarkan jumlah Short Break yang sudah dilakukan
   const getNextMode = () => {
-    if (shortBreakCount < 2) {
-      // Jika belum mencapai 2 Short Break, ganti ke Short Break berikutnya
+    if (shortBreakCount < 3) {
+      // Jika belum mencapai 3 Short Break, ganti ke Short Break berikutnya
       return "shortBreak";
     } else {
-      // Jika sudah melakukan 2 Short Break, ganti ke Long Break
+      // Jika sudah melakukan 3 Short Break, ganti ke Long Break
       setShortBreakCount(0); // Reset jumlah Short Break
       return "longBreak";
     }
