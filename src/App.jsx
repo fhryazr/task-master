@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <div className="App flex flex-col justify-center items-center">
-        <div className="flex justify-center w-full mb-8">
+        <div className="flex justify-center w-full mb-8">  
           <TimerWrapper />
         </div>
         <TodoWrapperLocalStorage />
