@@ -8,18 +8,18 @@ const TimerWrapper = () => {
   const modes = {
     focus: {
       label: "Focus",
-      duration: 0, // Durasi mode Focus dalam menit
-      seconds_duration: 5,
+      duration: 25, // Durasi mode Focus dalam menit
+      seconds_duration: 0,
     },
     shortBreak: {
       label: "Short Break",
-      duration: 0,
-      seconds_duration: 2, // Durasi mode Short Break dalam menit
+      duration: 5,
+      seconds_duration: 0, // Durasi mode Short Break dalam menit
     },
     longBreak: {
       label: "Long Break",
-      duration: 0, // Durasi mode Long Break dalam menit
-      seconds_duration: 3,
+      duration: 15, // Durasi mode Long Break dalam menit
+      seconds_duration: 0,
     },
   };
 
