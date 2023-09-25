@@ -1,13 +1,13 @@
 import "./App.css";
 import { TodoWrapperLocalStorage } from "./components/Task/TodoWrapperLocalStorage";
-import WaktuWrapper from "./components/waktu/WaktuWrapper";
+import TimerWrapper from "./components/Timer/TimerWrapper";
 
 function App() {
   return (
     <>
       <div className="App flex flex-col justify-center items-center">
         <div className="flex justify-center w-full mb-8">
-          <WaktuWrapper />
+          <TimerWrapper />
         </div>
         <TodoWrapperLocalStorage />
       </div>
