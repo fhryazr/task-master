@@ -34,12 +34,11 @@ const AboutUs = () => {
         What is TaskMaster?
       </h2>
       <p className="display block mt-5 text-white">
-        TaskMaster adalah platform manajemen tugas dan waktu inovatif yang
-        membantu individu dan tim mengatur tugas secara efisien. Ini adalah
-        solusi berbasis web dengan manajemen tugas, integrasi teknik Pomodoro,
-        dan pemantauan statistik produktivitas. TaskMaster bertujuan
-        meningkatkan produktivitas dan kinerja pengguna dalam pekerjaan dan
-        aktivitas sehari-hari.
+        TaskMaster is an innovative task and time management platform that helps
+        individuals and teams organize tasks efficiently. It is a web-based
+        solution with task management, Pomodoro technique integration, and
+        monitoring of productivity statistics. TaskMaster aims to improve user
+        productivity and performance in work and daily activities.
       </p>
     </div>
   );
