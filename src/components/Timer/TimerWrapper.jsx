@@ -1,79 +1,86 @@
 import { useState } from "react";
 import Timer from "./Timer";
+import TimerSettingsModal from "./TimerSettingsModal"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 const TimerWrapper = () => {
-  const [currentMode, setCurrentMode] = useState("focus"); // Mode default adalah "focus"
-  const [shortBreakCount, setShortBreakCount] = useState(0); // Jumlah Short Break yang sudah dilakukan
+  const [currentMode, setCurrentMode] = useState("focus");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [timerSettings, setTimerSettings] = useState({
+    focus: 25,
+    shortBreak: 5,
+    longBreak: 15,
+  });
 
   const modes = {
-    focus: {
-      label: "Focus",
-      duration: 25, // Durasi mode Focus dalam menit
-      seconds_duration: 0,
-    },
-    shortBreak: {
-      label: "Short Break",
-      duration: 5,
-      seconds_duration: 0, // Durasi mode Short Break dalam menit
-    },
-    longBreak: {
-      label: "Long Break",
-      duration: 15, // Durasi mode Long Break dalam menit
-      seconds_duration: 0,
-    },
+    focus: "Focus",
+    shortBreak: "Short Break",
+    longBreak: "Long Break",
   };
 
   const handleModeChange = (mode) => {
     setCurrentMode(mode);
   };
 
-  // Fungsi untuk menambah jumlah Short Break yang sudah dilakukan
-  const incrementShortBreakCount = () => {
-    setShortBreakCount(shortBreakCount + 1);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
   };
 
-  // Logika untuk mengatur mode selanjutnya berdasarkan jumlah Short Break yang sudah dilakukan
-  const getNextMode = () => {
-    if (shortBreakCount < 3) {
-      // Jika belum mencapai 3 Short Break, ganti ke Short Break berikutnya
-      return "shortBreak";
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSaveSettings = (updatedSettings) => {
+    setTimerSettings(updatedSettings);
+    setIsModalOpen(false);
+  };
+
+  const [intervalCount, setIntervalCount] = useState(0)
+
+  const handleTimerComplete = () => {
+    // Logika untuk mengganti mode
+    setIntervalCount(intervalCount + 1)
+
+    // Logika untuk mengganti mode
+    if (currentMode === "focus" && intervalCount < 4) {
+      setCurrentMode("shortBreak");
+    } else if (currentMode === "focus" && intervalCount === 4) {
+      setCurrentMode("longBreak");
+      // Reset intervalCount setelah 2 interval
+      setIntervalCount(0);
     } else {
-      // Jika sudah melakukan 3 Short Break, ganti ke Long Break
-      setShortBreakCount(0); // Reset jumlah Short Break
-      return "longBreak";
+      setCurrentMode("focus");
     }
   };
 
-  // Check apakah currentMode adalah kunci yang valid dalam modes sebelum mengakses propertinya
-  const currentModeData = modes[currentMode] || { duration: 0 };
-
   return (
     <div className="TimerWrapper">
-      <div className="mode-buttons">
+      <div className="mode-buttons flex justify-around items-center font-semibold text-white mb-2 text-lg">
         {Object.keys(modes).map((modeKey) => (
           <button
             key={modeKey}
             onClick={() => handleModeChange(modeKey)}
-            className={currentMode === modeKey ? "active" : ""}
+            className={`mode-button ${currentMode === modeKey ? "active text-white" : "text-slate-300 hover:text-white"}`}
           >
-            {modes[modeKey].label}
+            {modes[modeKey]}
           </button>
         ))}
+        <FontAwesomeIcon icon={faGear} onClick={handleOpenModal} className="cursor-pointer" />
       </div>
       <Timer
         mode={currentMode}
-        duration={currentModeData.duration}
-        setCurrentMode={(mode) => {
-          // Handle logika perubahan mode di sini
-          if (mode === "shortBreak") {
-            incrementShortBreakCount(); // Tambah jumlah Short Break yang sudah dilakukan
-            setCurrentMode(getNextMode()); // Ganti ke mode selanjutnya
-          } else {
-            setCurrentMode(mode);
-          }
-        }}
-        seconds_duration={currentModeData.seconds_duration}
+        settings={timerSettings}
+        onTimerComplete={handleTimerComplete}
       />
+      {isModalOpen && (
+        <TimerSettingsModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveSettings}
+          settings={timerSettings}
+        />
+      )}
     </div>
   );
 };

@@ -1,33 +1,32 @@
+// TodoWrapperLocalStorage.js
 import { useState, useEffect } from "react";
 import { TodoForm } from "./TodoForm";
 import { v4 as uuidv4 } from "uuid";
 import { Todo } from "./Todo";
 import { EditTodoForm } from "./EditTodoForm";
+// import "./Todo.css"; // Impor file CSS dengan gaya tambahan
 
-uuidv4(); //generate id untuk Task Baru
+uuidv4();
 
-// Buat fungsi untuk mengambil data dari localStorage
 const getTodosFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem("todos")) || [];
 };
 
-// Buat fungsi untuk menyimpan data ke localStorage
 const saveTodosToLocalStorage = (todos) => {
   localStorage.setItem("todos", JSON.stringify(todos));
 };
 
-// Komponen utama untuk manajemen tugas
 export const TodoWrapperLocalStorage = () => {
-  const [todos, setTodos] = useState(getTodosFromLocalStorage()); // State daftar tugas dari localStorage
-  const [completedTodos, setCompletedTodos] = useState(0); // State untuk jumlah tugas yang sudah selesai
+  const [todos, setTodos] = useState(getTodosFromLocalStorage());
+  const [completedTodos, setCompletedTodos] = useState(0);
+  const [selectedTask, setSelectedTask] = useState(null); // Tambahkan state untuk selected task
+
 
   useEffect(() => {
-    // Hitung jumlah tugas yang sudah selesai saat komponen pertama kali dimuat
     const completedCount = todos.filter((todo) => todo.completed).length;
     setCompletedTodos(completedCount);
   }, [todos]);
 
-  // Fungsi untuk menambahkan tugas baru
   const addTodo = (todo) => {
     const newTodos = [
       ...todos,
@@ -37,7 +36,6 @@ export const TodoWrapperLocalStorage = () => {
     saveTodosToLocalStorage(newTodos);
   };
 
-  // Fungsi untuk mengatur status tugas (selesai atau belum selesai)
   const toggleComplete = (id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
@@ -45,23 +43,19 @@ export const TodoWrapperLocalStorage = () => {
     setTodos(newTodos);
     saveTodosToLocalStorage(newTodos);
 
-    // Hitung ulang jumlah tugas yang sudah selesai setiap kali ada perubahan
     const completedCount = newTodos.filter((todo) => todo.completed).length;
     setCompletedTodos(completedCount);
   };
 
-  // Fungsi untuk menghapus tugas
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
     saveTodosToLocalStorage(newTodos);
 
-    // Hitung ulang jumlah tugas yang sudah selesai setelah menghapus tugas
     const completedCount = newTodos.filter((todo) => todo.completed).length;
     setCompletedTodos(completedCount);
   };
 
-  // Fungsi untuk mengedit tugas
   const editTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -70,7 +64,6 @@ export const TodoWrapperLocalStorage = () => {
     );
   };
 
-  // Fungsi untuk menyimpan tugas yang telah diedit
   const saveEditTask = (task, id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
@@ -79,7 +72,6 @@ export const TodoWrapperLocalStorage = () => {
     saveTodosToLocalStorage(newTodos);
   };
 
-  // Fungsi untuk menghapus tugas yang sudah selesai
   const clearCompleted = () => {
     if (completedTodos === 0) {
       alert("belum ada tugas yang selesai");
@@ -89,7 +81,7 @@ export const TodoWrapperLocalStorage = () => {
     saveTodosToLocalStorage(unclearTodos);
     setCompletedTodos(0);
   };
-  
+
   return (
     <div className="TodoWrapper container w-[95vw] sm:w-[70vw] lg:w-[50vw]">
       <h1 className="mb-2 font-semibold text-xl text-white">Task Today</h1>
@@ -103,7 +95,11 @@ export const TodoWrapperLocalStorage = () => {
           ) : (
             todos.map((todo) =>
               todo.isEditing ? (
-                <EditTodoForm key={todo.id} editTodo={saveEditTask} task={todo} />
+                <EditTodoForm
+                  key={todo.id}
+                  editTodo={saveEditTask}
+                  task={todo}
+                />
               ) : (
                 <Todo
                   task={todo}
@@ -111,6 +107,8 @@ export const TodoWrapperLocalStorage = () => {
                   toggleComplete={toggleComplete}
                   deleteTodo={deleteTodo}
                   editTodo={editTodo}
+                  isSelected={selectedTask === todo.id} // Mengirimkan prop isSelected
+                  setSelected={setSelectedTask} // Mengirimkan prop setSelected
                 />
               )
             )
