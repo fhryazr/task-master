@@ -1,16 +1,17 @@
 import "./App.css";
-import { TodoWrapperLocalStorage } from "./components/Task/TodoWrapperLocalStorage";
-import TimerWrapper from "./components/Timer/TimerWrapper";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
+import HomePage from "./pages/HomaPage";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
   return (
     <>
-      <div className="App flex flex-col justify-center items-center">
-        <div className="flex justify-center w-full mb-8">  
-          <TimerWrapper />
-        </div>
-        <TodoWrapperLocalStorage />
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/admin" element={<AdminPage/>}/>
+        </Routes>
+      </Router>
     </>
   );
 }

@@ -16,7 +16,7 @@ const saveTodosToLocalStorage = (todos) => {
   localStorage.setItem("todos", JSON.stringify(todos));
 };
 
-export const TodoWrapperLocalStorage = () => {
+const TodoWrapperLocalStorage = () => {
   const [todos, setTodos] = useState(getTodosFromLocalStorage());
   const [completedTodos, setCompletedTodos] = useState(0);
   const [selectedTask, setSelectedTask] = useState(null); // Tambahkan state untuk selected task
@@ -123,3 +123,5 @@ export const TodoWrapperLocalStorage = () => {
     </div>
   );
 };
+
+export default TodoWrapperLocalStorage
