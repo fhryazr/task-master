@@ -14,8 +14,8 @@ export const EditTodoForm = ({ editTodo, task }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="TodoForm flex h-12 mb-4 mt-4 rounded-lg drop-shadow-md gap-4">
-        
+      className="TodoForm flex h-12 mb-4 mt-4 rounded-lg drop-shadow-md gap-4"
+    >
       {/* Input Edited Task User */}
       <input
         type="text"
@@ -28,7 +28,8 @@ export const EditTodoForm = ({ editTodo, task }) => {
       {/* Button Save Edited Task */}
       <button
         type="submit"
-        className="todo-btn px-4 py-1 bg-purple-900 text-white rounded-lg">
+        className="todo-btn px-4 py-1 bg-purple-900 text-white rounded-lg"
+      >
         Save
       </button>
     </form>

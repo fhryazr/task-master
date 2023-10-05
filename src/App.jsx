@@ -1,19 +1,19 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
-import HomePage from "./pages/HomaPage";
 import AdminPage from "./pages/AdminPage";
+import Home from "./pages/home";
 
-function App() {
+const App = () => {
   return (
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage/>}/>
+          <Route path="/" element={<Home/>}/>
           <Route path="/admin" element={<AdminPage/>}/>
         </Routes>
       </Router>
     </>
   );
-}
+};
 
 export default App;
