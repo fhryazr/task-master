@@ -78,7 +78,7 @@ export default function App() {
 
   return (
     <div
-      className={`faq display inline-block mx-20 mt-20 ms-20 me-20 max-h-[300px] overflow-y-auto ${
+      className={`faq display inline-block mx-20 ms-20 me-20 max-h-[300px] overflow-y-auto ${
         isVisible ? "fade-in" : ""
       }`}
       ref={faqRef}

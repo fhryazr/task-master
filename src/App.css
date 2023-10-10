@@ -7,15 +7,14 @@
 }
 
 body {
-  /* background: linear-gradient(243deg, #04D2FF 0%, #A609F0 100%); */
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Poppins", sans-serif;
 }
 
 .App {
-  height: 245vh;
-  font-family: "Poppins", sans-serif;
+  height: 100vh;
 }
 
 .completed {
@@ -24,9 +23,13 @@ body {
   text-decoration-thickness: 2px;
 }
 
-.left-top {
+/* .left-top {
   display: flex;
   position: absolute;
   top: 10px;
   left: 130px;
+} */
+
+.About {
+  height: 100vh;
 }

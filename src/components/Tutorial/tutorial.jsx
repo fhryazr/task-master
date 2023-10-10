@@ -25,7 +25,7 @@ const AboutUs = () => {
   return (
     <div
       ref={aboutUsRef}
-      className={`about-us display inline-block mx-20 mt-20 ms-20 me-20 ${
+      className={`about-us display inline-block mx-20 ms-20 me-20 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       } transition-opacity duration-1000 ease-in-out transform`}
     >

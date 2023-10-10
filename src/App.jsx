@@ -1,18 +1,18 @@
-import "./App.css";
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
+// import "./App.css";
+import { Routes, Route } from "react-router-dom"
+import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
-import Home from "./pages/home";
 
 
 const App = () => {
   return (
     <>
-      <Router>
         <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/admin" element={<AdminPage/>}/>
+          <Route path="/">
+            <Route index element={<HomePage/>}/>
+            <Route path="admin/*" element={<AdminPage />}/>
+          </Route>
         </Routes>
-      </Router>
     </>
   );
 };
