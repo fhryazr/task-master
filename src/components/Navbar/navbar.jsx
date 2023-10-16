@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
+import ProfilePopup from "./profil"; // Pastikan Anda mengganti jalur impor sesuai dengan struktur proyek Anda
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Ganti ini dengan status login yang sesuai
 
   useEffect(() => {
     if (showPopover) {
@@ -61,7 +63,7 @@ function Navbar() {
                 >
                   <ul>
                     {options.map((option) => (
-                      <li key={option}>
+                      <li key={option.label}>
                         <a
                           href="#"
                           className="cursor-pointer hover:bg-gray-100 p-2 block"
@@ -78,16 +80,18 @@ function Navbar() {
                 </div>
               )}
             </li>
-            <li>
-              <a href="#services" className="text-white hover:text-blue-200">
-                Settings
-              </a>
-            </li>
-            <li>
-              <a href="login" className="text-white hover:text-blue-200">
-                Login
-              </a>
-            </li>
+            {isLoggedIn ? (
+              <li>
+                <ProfilePopup />{" "}
+                {/* Menampilkan profil ketika pengguna sudah login */}
+              </li>
+            ) : (
+              <li>
+                <a href="login" className="text-white hover:text-blue-200">
+                  Login
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

@@ -16,6 +16,7 @@ function Login() {
     signInWithEmailAndPassword(database, email, password)
       .then((data) => {
         console.log(data, "authData");
+        setLogin(true);
         history("/");
       })
       .catch((err) => {
