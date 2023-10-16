@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
-import ProfilePopup from "./profil"; // Pastikan Anda mengganti jalur impor sesuai dengan struktur proyek Anda
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Ganti ini dengan status login yang sesuai
 
   useEffect(() => {
     if (showPopover) {
@@ -45,7 +43,7 @@ function Navbar() {
     <nav className="bg-white-500 py-2 w-full">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="text-white text-xl font-semibold">My Website</div>
+          <div className="text-white text-xl font-semibold">Task Master</div>
           <ul className="flex space-x-4">
             <li>
               <a
@@ -54,7 +52,7 @@ function Navbar() {
                 onClick={handlePopoverClick}
                 ref={referenceElement}
               >
-                Info
+                About
               </a>
               {showPopover && (
                 <div
@@ -63,7 +61,7 @@ function Navbar() {
                 >
                   <ul>
                     {options.map((option) => (
-                      <li key={option.label}>
+                      <li key={option.contentId}>
                         <a
                           href="#"
                           className="cursor-pointer hover:bg-gray-100 p-2 block"
@@ -80,18 +78,16 @@ function Navbar() {
                 </div>
               )}
             </li>
-            {isLoggedIn ? (
-              <li>
-                <ProfilePopup />{" "}
-                {/* Menampilkan profil ketika pengguna sudah login */}
-              </li>
-            ) : (
-              <li>
-                <a href="login" className="text-white hover:text-blue-200">
-                  Login
-                </a>
-              </li>
-            )}
+            <li>
+              <a href="" className="text-white hover:text-blue-200">
+                Stats
+              </a>
+            </li>
+            <li>
+              <a href="login" className="text-white hover:text-blue-200">
+                Login
+              </a>
+            </li>
           </ul>
         </div>
       </div>

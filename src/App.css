@@ -7,16 +7,20 @@
 }
 
 body {
-  /* background: linear-gradient(243deg, #04D2FF 0%, #A609F0 100%); */
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.App {
-  height: 250vh;
   font-family: "Poppins", sans-serif;
 }
+
+/* .App {
+  height: 100vh;
+} */
+
+/* .Top{
+  height: 100vh;
+  margin-top: 0px;
+} */
 
 .completed {
   color: rgb(178, 178, 178);
@@ -24,9 +28,13 @@ body {
   text-decoration-thickness: 2px;
 }
 
-.left-top {
+/* .left-top {
   display: flex;
   position: absolute;
   top: 10px;
   left: 130px;
+} */
+
+.About {
+  height: 100vh;
 }

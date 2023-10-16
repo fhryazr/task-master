@@ -25,11 +25,11 @@ const AboutUs = () => {
   return (
     <div
       ref={aboutUsRef}
-      className={`about-us display inline-block mx-20 mt-20 ms-20 me-20 ${
+      className={`about-us w-[95vw] sm:w-[70vw] lg:w-[50vw] p-4 display inline-block ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       } transition-opacity duration-1000 ease-in-out transform`}
     >
-      <h2 className="text-white font-semibold border-b-2 border-gray-300 pb-2 text-[27px]">
+      <h2 className="text-white font-semibold border-b-2 border-gray-300 pb-2 text-xl lg:text-lg">
         How to use TaskMaster?
       </h2>
       <ol className="list-decimal pl-5 mt-5 text-white">
@@ -40,7 +40,7 @@ const AboutUs = () => {
           Mulai dengan menambahkan tugas baru.
         </li>
         <li style={{ marginTop: "10px" }}>
-          Tentukan deadline atau waktu penyelesaian tugas.
+          Putar Background Musik Yang Kamu Inginkan.
         </li>
       </ol>
     </div>
