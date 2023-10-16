@@ -5,9 +5,26 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signOut } from "firebase/auth"
+import { useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
 
 const Sidebar = () => {
+  const {dispatch} = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        dispatch({type: "LOGOUT"})
+        navigate('/')
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  };
   return (
     <div className="sidebar">
       <div className="top">
@@ -46,7 +63,7 @@ const Sidebar = () => {
             <SettingsApplicationsIcon className="icon" />
             <span>Settings</span>
           </li>
-          <li>
+          <li onClick={handleLogout}>
             <ExitToAppIcon className="icon" />
             <span>Logout</span>
           </li>

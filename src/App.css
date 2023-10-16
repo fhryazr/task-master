@@ -13,9 +13,14 @@ body {
   font-family: "Poppins", sans-serif;
 }
 
-.App {
+/* .App {
   height: 100vh;
-}
+} */
+
+/* .Top{
+  height: 100vh;
+  margin-top: 0px;
+} */
 
 .completed {
   color: rgb(178, 178, 178);

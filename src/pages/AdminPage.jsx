@@ -16,17 +16,13 @@ const AdminPage = () => {
               <Route index element={<List List_Title="ADD NEW USERS"/>} />
               <Route path=":userId" element={<Single />} />
               <Route
-                path="new"
+                path="/users/new"
                 element={<New inputs={userInputs} title="Add New User" />}
               />
             </Route>
             <Route path="/subscription">
               <Route index element={<List List_Title="Subscription"/>} />
-              <Route path=":userId" element={<Single />} />
-              <Route
-                path="new"
-                element={<New inputs={userInputs} title="Add New User" />}
-              />
+              {/* <Route path=":userId" element={<Single />} /> */}
             </Route>
         </Routes>
     </div>

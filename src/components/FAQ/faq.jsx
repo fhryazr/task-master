@@ -29,7 +29,8 @@ const styles = {
   titleTextColor: "white",
   rowTitleColor: "white",
   rowContentColor: "white",
-  titleTextSize: "27px",
+  titleTextSize: "20px",
+  // rowTitleSize: "16px",
   arrowColor: "white",
 };
 
@@ -78,7 +79,7 @@ export default function App() {
 
   return (
     <div
-      className={`faq display inline-block mx-20 ms-20 me-20 max-h-[300px] overflow-y-auto ${
+      className={`faq display inline-block overflow-y-auto p-4 text-sm w-[90vw] sm:w-[70vw] lg:w-[50vw]  ${
         isVisible ? "fade-in" : ""
       }`}
       ref={faqRef}

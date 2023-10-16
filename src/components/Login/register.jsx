@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { database, provider } from "./FirebaseConfig";
+import { auth, provider } from "../../config/FirebaseConfig";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
-function Register() {
+const Register = () => {
   const [setRegister] = useState(false);
   const history = useNavigate();
-  const [user, setUser] = useState(null);
+  const [setUser] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,13 +22,14 @@ function Register() {
       return;
     }
 
-    createUserWithEmailAndPassword(database, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((data) => {
         console.log(data, "authData");
         history("/login");
       })
+
       .catch((err) => {
-        alert(err.code);
+        console.log(err.code);
         setRegister(true);
       });
   };
@@ -37,7 +39,7 @@ function Register() {
   };
 
   const handleGoogleLogin = () => {
-    signInWithPopup(database, provider)
+    signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
         setUser(user);
@@ -53,7 +55,7 @@ function Register() {
       <div className="login-container">
         <h1 className="judul font-bold text-xl">Sign Up</h1>
         <form onSubmit={handleSubmit}>
-          <input className="email-input" name="email" placeholder="Email" />
+          <input className="email-input" name="email" type="email" placeholder="Email" />
           <br />
           <input
             className="pass-input"

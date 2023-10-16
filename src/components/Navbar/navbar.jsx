@@ -43,7 +43,7 @@ function Navbar() {
     <nav className="bg-white-500 py-2 w-full">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="text-white text-xl font-semibold">My Website</div>
+          <div className="text-white text-xl font-semibold">Task Master</div>
           <ul className="flex space-x-4">
             <li>
               <a
@@ -52,7 +52,7 @@ function Navbar() {
                 onClick={handlePopoverClick}
                 ref={referenceElement}
               >
-                Info
+                About
               </a>
               {showPopover && (
                 <div
@@ -61,7 +61,7 @@ function Navbar() {
                 >
                   <ul>
                     {options.map((option) => (
-                      <li key={option}>
+                      <li key={option.contentId}>
                         <a
                           href="#"
                           className="cursor-pointer hover:bg-gray-100 p-2 block"
@@ -79,8 +79,8 @@ function Navbar() {
               )}
             </li>
             <li>
-              <a href="#services" className="text-white hover:text-blue-200">
-                Settings
+              <a href="" className="text-white hover:text-blue-200">
+                Stats
               </a>
             </li>
             <li>

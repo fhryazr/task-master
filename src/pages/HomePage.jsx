@@ -4,27 +4,31 @@ import AboutUs from "../components/About_Me/about";
 import Tutorial from "../components/Tutorial/tutorial";
 import FaQ from "../components/FAQ/faq";
 import Navbar from "../components/Navbar/navbar";
+import "../App.css";
 
 function HomePage() {
   return (
     <>
-      <div className="App flex flex-col justify-center items-center">
-        <Navbar />
-        <div className="flex justify-center w-full mb-8">
-          <TimerWrapper />
+      <div className="App">
+        <div className="top-0 sticky z-50">
+          <Navbar />
         </div>
-        <TodoWrapperLocalStorage />
-        <div
-          className="flex justify-center items-center w-[800px]"
-          id="about-us"
-        >
-          <AboutUs />
+        <div className="Top h-screen flex flex-col justify-center items-center mb-4">
+          <div className="flex justify-center w-full mb-8 mt-[-100px]">
+            <TimerWrapper />
+          </div>
+          <TodoWrapperLocalStorage />
         </div>
-        <div className="flex items-center w-[800px]" id="tutorial">
-          <Tutorial />
-        </div>
-        <div className="flex items-center w-[800px]" id="FAQ">
-          <FaQ />
+        <div className="Bottom flex flex-col items-center">
+          <div id="about-us">
+            <AboutUs />
+          </div>
+          <div id="tutorial">
+            <Tutorial />
+          </div>
+          <div id="FAQ">
+            <FaQ />
+          </div>
         </div>
       </div>
     </>

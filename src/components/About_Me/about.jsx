@@ -9,7 +9,6 @@ const AboutUs = () => {
     const handleScroll = () => {
       const elementPosition = aboutUsElement.getBoundingClientRect().top;
 
-      // Tambahkan pengecekan jika elemen berada dalam viewport
       if (elementPosition <= window.innerHeight) {
         setIsVisible(true);
       } else {
@@ -26,11 +25,11 @@ const AboutUs = () => {
   return (
     <div
       ref={aboutUsRef}
-      className={`about-us display inline-block mx-20 ms-20 me-20 ${
+      className={`about-us p-4 w-[95vw] sm:w-[70vw] lg:w-[50vw] display inline-block ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
       } transition-opacity duration-1000 ease-in-out transform`}
     >
-      <h2 className="text-white font-semibold border-b-2 border-gray-300 pb-2 text-[27px]">
+      <h2 className="text-white font-semibold border-b-2 border-gray-300 pb-2 text-xl lg:text-lg">
         What is TaskMaster?
       </h2>
       <p className="display block mt-5 text-white">
