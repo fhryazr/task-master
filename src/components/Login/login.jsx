@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "../../config/FirebaseConfig";
 
 function Login() {
   const [setLogin] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
   // const [user, setUser] = useState(null);
 
   const {dispatch} = useContext(AuthContext)
@@ -22,9 +24,9 @@ function Login() {
         // console.log(data, "authData");
         dispatch({type:"LOGIN", payload: data.user})
         if (data.user.uid == "2AFvQr96kTRjcsjpyThP09WVzkU2"){
-          history('/admin')
+          navigate('/admin')
         } else {
-          history('/')
+          navigate('/')
         }
       })
       .catch((err) => {
@@ -35,19 +37,40 @@ function Login() {
   };
 
   const handleReset = () => {
-    history("/reset");
+    navigate("/reset");
   };
 
   const handleRegister = () => {
-    history("/register");
+    navigate("/register");
   };
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then(() => {
-        // const user = result.user;
-        // setUser(user);
-        history("/");
+      .then((result) => {
+        // console.log(result);
+        dispatch({type:"LOGIN", payload: result.user})
+        const slicingEmail = result.user.email.match(/^(.+)@/);
+        const userData = {
+          displayName: result.user.displayName,
+          username: slicingEmail[1],
+          email: result.user.email,
+          roles: "user",
+          img: result.user.photoURL
+        };
+
+        const userDocRef = doc(db, "users", result.user.uid);
+
+        // Gunakan setDoc untuk menambahkan data ke dokumen
+        setDoc(userDocRef, userData)
+          .then(() => {
+            console.log("berhasil masuk");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        // console.log(userData)
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -73,7 +96,7 @@ function Login() {
           </p>
           <br />
           <button className="submit-button">Login</button>
-          <p>Don`&apos`t have an account?{" "}
+          <p>Don&apos;t have an account?{" "}
             <a className="signup-link" onClick={handleRegister}>
               Sign Up
             </a>

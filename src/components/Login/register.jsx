@@ -1,14 +1,17 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
-import { auth, provider } from "../../config/FirebaseConfig";
+import { auth, db, provider } from "../../config/FirebaseConfig";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import { AuthContext } from "../../context/AuthContext";
 import "./style.css";
 
 const Register = () => {
-  const [setRegister] = useState(false);
-  const history = useNavigate();
-  const [setUser] = useState(null);
+  const navigate = useNavigate();
+  const {dispatch} = useContext(AuthContext)
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,25 +28,69 @@ const Register = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((data) => {
         console.log(data, "authData");
-        history("/login");
-      })
 
+        const slicingEmail = email.match(/^(.+)@/);
+
+        const userData = {
+          displayName: slicingEmail[1],
+          username: slicingEmail[1],
+          email: data.user.email,
+          password: password,
+          roles: "user",
+          img: null
+        };
+
+        const userDocRef = doc(db, "users", data.user.uid);
+
+        // Gunakan setDoc untuk menambahkan data ke dokumen
+        setDoc(userDocRef, userData)
+          .then(() => {
+            console.log("berhasil masuk");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        console.log(userData);
+        // navigate("/login");
+      })
       .catch((err) => {
-        console.log(err.code);
-        setRegister(true);
+        console.error(err);
+        // setRegister(true);
       });
   };
 
   const handleLogin = () => {
-    history("/login");
+    navigate("/login");
   };
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const user = result.user;
-        setUser(user);
-        history("/");
+        // console.log(result);
+        dispatch({type:"LOGIN", payload: result.user})
+        const slicingEmail = result.user.email.match(/^(.+)@/);
+        const userData = {
+          displayName: result.user.displayName,
+          username: slicingEmail[1],
+          email: result.user.email,
+          roles: "user",
+          img: result.user.photoURL
+        };
+
+        const userDocRef = doc(db, "users", result.user.uid);
+
+        // Gunakan setDoc untuk menambahkan data ke dokumen
+        setDoc(userDocRef, userData)
+          .then(() => {
+            console.log("berhasil masuk");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        // console.log(userData)
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -55,7 +102,12 @@ const Register = () => {
       <div className="login-container">
         <h1 className="judul font-bold text-xl">Sign Up</h1>
         <form onSubmit={handleSubmit}>
-          <input className="email-input" name="email" type="email" placeholder="Email" />
+          <input
+            className="email-input"
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
           <br />
           <input
             className="pass-input"
@@ -87,12 +139,12 @@ const Register = () => {
               className="g-logo"
               alt="Google Logo"
             />
-            <span>Login with Google</span>
+            <span>Sign Up with Google</span>
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default Register;
