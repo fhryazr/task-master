@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { auth, provider } from "../../config/FirebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  fetchSignInMethodsForEmail,
-  signInWithPopup,
-} from "firebase/auth";
+/* eslint-disable no-unused-vars */
+import { useState, useContext } from "react";
+import { auth, db, provider } from "../../config/FirebaseConfig";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
+import { AuthContext } from "../../context/AuthContext";
 import "./style.css";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { dispatch } = useContext(AuthContext);
   const [isRegistered, setIsRegistered] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
-  const [emailError, setEmailError] = useState(false); // Tambahkan state untuk kesalahan email
-  const history = useNavigate();
-  const setUser = useState(null);
+  const [emailError, setEmailError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,40 +26,72 @@ const Register = () => {
       return;
     }
 
-    try {
-      setPasswordMatchError(false);
-      // Cek apakah email sudah digunakan
-      const methods = await fetchSignInMethodsForEmail(auth, email);
-      if (methods.length === 0) {
-        setEmailError(false); // Reset state jika email valid
-        // Email belum digunakan, daftarkan pengguna baru
-        await createUserWithEmailAndPassword(auth, email, password);
-        setIsRegistered(true);
-        history("/login");
-      } else {
-        setEmailError(true); // Set state jika email telah digunakan
-        alert("Email already in use.");
-      }
-    } catch (error) {
-      console.error("Error registering:", error);
-      if (error.code === "auth/email-already-in-use") {
-        alert("Email already in use");
-      } else {
-        alert("Failed Registration.");
-      }
-    }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((data) => {
+        console.log(data, "authData");
+
+        const slicingEmail = email.match(/^(.+)@/);
+
+        const userData = {
+          displayName: slicingEmail[1],
+          username: slicingEmail[1],
+          email: data.user.email,
+          password: password,
+          roles: "user",
+          img: null,
+        };
+
+        const userDocRef = doc(db, "users", data.user.uid);
+
+        // Gunakan setDoc untuk menambahkan data ke dokumen
+        setDoc(userDocRef, userData)
+          .then(() => {
+            console.log("berhasil masuk");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        console.log(userData);
+        // navigate("/login");
+      })
+      .catch((err) => {
+        console.error(err);
+        // setRegister(true);
+      });
   };
 
   const handleLogin = () => {
-    history("/login");
+    navigate("/login");
   };
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const user = result.user;
-        setUser(user);
-        history("/");
+        // console.log(result);
+        dispatch({ type: "LOGIN", payload: result.user });
+        const slicingEmail = result.user.email.match(/^(.+)@/);
+        const userData = {
+          displayName: result.user.displayName,
+          username: slicingEmail[1],
+          email: result.user.email,
+          roles: "user",
+          img: result.user.photoURL,
+        };
+
+        const userDocRef = doc(db, "users", result.user.uid);
+
+        // Gunakan setDoc untuk menambahkan data ke dokumen
+        setDoc(userDocRef, userData)
+          .then(() => {
+            console.log("berhasil masuk");
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        // console.log(userData)
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -119,7 +150,7 @@ const Register = () => {
               className="g-logo"
               alt="Google Logo"
             />
-            <span>Login with Google</span>
+            <span>Sign Up with Google</span>
           </div>
         </form>
       </div>
