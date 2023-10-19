@@ -1,5 +1,3 @@
-/* ProfilePopup.css */
-
 .profile-popup {
   background-color: #fff;
   padding: 1rem;
@@ -57,4 +55,21 @@ input[type="text"] {
   color: #4a5568;
 }
 
-/* You can add more classes as needed for additional styling */
+.image-container {
+  position: relative;
+  width: 100px; /* Sesuaikan ukuran kontainer dengan keinginan Anda */
+  height: 100px; /* Sesuaikan ukuran kontainer dengan keinginan Anda */
+  border-radius: 50%; /* Mengubah kontainer menjadi lingkaran */
+  border: 2px solid #ccc; /* Menambahkan border berwarna abu-abu (#ccc) */
+  overflow: hidden; /* Untuk memastikan gambar di dalamnya sesuai dengan lingkaran */
+
+  display: flex;
+  justify-content: center; /* Menempatkan kontennya ke tengah horizontal */
+  align-items: center;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

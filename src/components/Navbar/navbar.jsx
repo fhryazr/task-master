@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
+import ProfilePopup from "./profil";
+import { getAuth } from "firebase/auth";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (showPopover) {
@@ -20,6 +24,15 @@ function Navbar() {
         ],
       });
     }
+
+    const auth = getAuth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
   }, [showPopover]);
 
   const handlePopoverClick = () => {
@@ -84,9 +97,23 @@ function Navbar() {
               </a>
             </li>
             <li>
-              <a href="login" className="text-white hover:text-blue-200">
-                Login
-              </a>
+              {isLoggedIn ? (
+                <a
+                  href="#"
+                  className="text-white hover:text-blue-200"
+                  onClick={() => {
+                    setShowProfile(true); // Menampilkan pop-up profil
+                  }}
+                ></a>
+              ) : (
+                <a href="login" className="text-white hover:text-blue-200">
+                  Login
+                </a>
+              )}
+              <ProfilePopup
+                showProfile={showProfile}
+                setShowProfile={setShowProfile}
+              />
             </li>
           </ul>
         </div>

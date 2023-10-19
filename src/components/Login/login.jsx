@@ -45,8 +45,6 @@ function Login() {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then(() => {
-        // const user = result.user;
-        // setUser(user);
         history("/");
       })
       .catch((err) => {
@@ -79,7 +77,7 @@ function Login() {
           <br />
           <button className="submit-button">Login</button>
           <p>
-            Don`&apos`t have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a className="signup-link" onClick={handleRegister}>
               Sign Up
             </a>

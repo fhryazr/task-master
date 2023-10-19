@@ -1,37 +1,54 @@
 import { useState } from "react";
 import { auth, provider } from "../../config/FirebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-
+import {
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  signInWithPopup,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
 
 const Register = () => {
-  const [setRegister] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [emailError, setEmailError] = useState(false); // Tambahkan state untuk kesalahan email
   const history = useNavigate();
-  const [setUser] = useState(null);
+  const setUser = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    const confirmPassword = e.target.confirmPassword.value; // Tambahkan ini
+    const confirmPassword = e.target.confirmPassword.value;
 
-    // Periksa apakah password dan konfirmasi password cocok
+    // Periksa apakah password dan confirm password cocok
     if (password !== confirmPassword) {
-      alert("Password and Confirm Password do not match.");
+      setPasswordMatchError(true);
       return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((data) => {
-        console.log(data, "authData");
+    try {
+      setPasswordMatchError(false);
+      // Cek apakah email sudah digunakan
+      const methods = await fetchSignInMethodsForEmail(auth, email);
+      if (methods.length === 0) {
+        setEmailError(false); // Reset state jika email valid
+        // Email belum digunakan, daftarkan pengguna baru
+        await createUserWithEmailAndPassword(auth, email, password);
+        setIsRegistered(true);
         history("/login");
-      })
-
-      .catch((err) => {
-        console.log(err.code);
-        setRegister(true);
-      });
+      } else {
+        setEmailError(true); // Set state jika email telah digunakan
+        alert("Email already in use.");
+      }
+    } catch (error) {
+      console.error("Error registering:", error);
+      if (error.code === "auth/email-already-in-use") {
+        alert("Email already in use");
+      } else {
+        alert("Failed Registration.");
+      }
+    }
   };
 
   const handleLogin = () => {
@@ -46,7 +63,7 @@ const Register = () => {
         history("/");
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -55,18 +72,22 @@ const Register = () => {
       <div className="login-container">
         <h1 className="judul font-bold text-xl">Sign Up</h1>
         <form onSubmit={handleSubmit}>
-          <input className="email-input" name="email" type="email" placeholder="Email" />
+          <input
+            className={`email-input ${emailError ? "error" : ""}`} // Terapkan class "error" jika emailError true
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
           <br />
           <input
-            className="pass-input"
+            className={`pass-input ${passwordMatchError ? "error" : ""}`}
             name="password"
             type="password"
             placeholder="Password"
           />
           <br />
-          {/* Tambahkan input untuk konfirmasi password */}
           <input
-            className="conf-input"
+            className={`conf-input ${passwordMatchError ? "error" : ""}`}
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
@@ -74,6 +95,17 @@ const Register = () => {
           <br />
           <br />
           <button className="submit-button">Signup</button>
+          {isRegistered && (
+            <div className="success-notification">Registration Successful!</div>
+          )}
+          {passwordMatchError && (
+            <div className="error-notification">
+              Password and Confirm Password do not match.
+            </div>
+          )}
+          {emailError && (
+            <div className="error-notification">Email is already in use.</div>
+          )}
           <p>
             Already have an account?{" "}
             <a className="login-link" onClick={handleLogin}>
@@ -93,6 +125,6 @@ const Register = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Register;
