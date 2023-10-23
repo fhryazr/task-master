@@ -15,25 +15,37 @@ function Login() {
 
   const { dispatch } = useContext(AuthContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    signInWithEmailAndPassword(auth, email, password)
-      .then((data) => {
-        // console.log(data, "authData");
-        dispatch({ type: "LOGIN", payload: data.user });
-        if (data.user.uid == "2AFvQr96kTRjcsjpyThP09WVzkU2") {
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential.user.emailVerified) {
+        // Pengguna telah memverifikasi email
+        // Lanjutkan dengan login
+        dispatch({ type: "LOGIN", payload: userCredential.user });
+        if (userCredential.user.uid === "2AFvQr96kTRjcsjpyThP09WVzkU2") {
           navigate("/admin");
         } else {
           navigate("/");
         }
-      })
-      .catch((err) => {
-        alert(err.code);
-        console.log(err);
-        setLogin(true);
-      });
+      } else {
+        // Email belum diverifikasi, tampilkan pesan kesalahan
+        alert("Please verify your email before logging in.");
+      }
+    } catch (error) {
+      // Handle kesalahan login di sini
+      alert("Invalid email or password.");
+      console.error(error);
+      setLogin(true);
+    }
   };
 
   const handleReset = () => {

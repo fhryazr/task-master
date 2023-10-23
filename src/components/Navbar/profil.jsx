@@ -1,19 +1,51 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useContext, useRef } from "react";
 import "./profil.css";
 import { db } from "../../../src/config/FirebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth, updateProfile } from "firebase/auth";
-import { useDropzone } from "react-dropzone";
+import { AuthContext } from "../../context/AuthContext";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 function ProfilePopup() {
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState("");
-  const [editedProfileImage, setEditedProfileImage] = useState("");
+  const [editedName, setEditedName] = useState();
+  const [editedProfileImage, setEditedProfileImage] = useState(null);
   const [user, setUser] = useState(null);
-  const history = useNavigate();
+  const { dispatch } = useContext(AuthContext);
+  const [file, setFile] = useState();
+  const inputRef = useRef();
+  const storage = getStorage();
+
+  const fetchUserProfileImage = () => {
+    if (user) {
+      const userDocRef = doc(db, "users", user.uid);
+
+      getDoc(userDocRef)
+        .then((doc) => {
+          if (doc.exists()) {
+            const userData = doc.data();
+            setEditedProfileImage(userData.photoURL);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user document:", error);
+        });
+    }
+  };
+
+  const getFirstNameFromEmail = (email) => {
+    // Memisahkan alamat email untuk mendapatkan nama awal
+    const emailParts = email.split("@");
+    if (emailParts.length > 0) {
+      return emailParts[0];
+    } else {
+      return email; // Gunakan alamat email sebagai nama awal jika pemisahan gagal
+    }
+  };
 
   useEffect(() => {
     const auth = getAuth();
@@ -21,6 +53,9 @@ function ProfilePopup() {
       if (user) {
         setIsLoggedIn(true);
         setUser(user);
+        fetchUserProfileImage();
+        const firstname = getFirstNameFromEmail(user.email);
+        setEditedName(firstname);
       } else {
         setIsLoggedIn(false);
         setUser(null);
@@ -31,8 +66,9 @@ function ProfilePopup() {
   const handleLogout = async () => {
     const auth = getAuth();
     await auth.signOut();
+    dispatch({ type: "LOGOUT" });
     setShowProfile(false);
-    history("/login");
+    setIsLoggedIn(false);
   };
 
   const handleEditProfile = () => {
@@ -43,37 +79,61 @@ function ProfilePopup() {
   const handleSaveProfile = async () => {
     if (user) {
       try {
-        await updateProfile(user, {
-          displayName: editedName,
-          photoURL: editedProfileImage,
-        });
-        const userDocRef = doc(db, "users", user.uid);
-        await setDoc(userDocRef, {
-          displayName: editedName,
-          photoURL: editedProfileImage,
-        });
+        // Jika ada file gambar yang diunggah, unggah ke Firebase Storage
+        if (file) {
+          const storageRef = ref(
+            storage,
+            `user-profiles/${user.uid}/${file.name}`
+          );
+          await uploadBytes(storageRef, file, {
+            /* metadata opsional */
+          });
+          const updatedFileURL = await getDownloadURL(storageRef);
+
+          // Perbarui foto profil pengguna dengan URL gambar yang diunggah
+          await updateProfile(user, {
+            photoURL: updatedFileURL,
+            displayName: editedName,
+          });
+          // Simpan URL gambar di database
+          const userDocRef = doc(db, "users", user.uid);
+          await setDoc(userDocRef, {
+            displayName: editedName,
+            email: user.email,
+            photoURL: updatedFileURL,
+          });
+          setUser({ ...user, displayName: editedName });
+
+          setEditedProfileImage(updatedFileURL); // Perbarui URL gambar di state
+        } else {
+          // Jika tidak ada gambar yang diunggah, tetap simpan data lainnya di database
+          const userDocRef = doc(db, "users", user.uid);
+          await setDoc(userDocRef, {
+            displayName: editedName,
+            email: user.email,
+            photoURL: editedProfileImage,
+          });
+
+          setUser({ ...user, displayName: editedName });
+        }
 
         setIsEditing(false);
-        // Berikan pesan sukses atau tindakan responsif lainnya kepada pengguna
         alert("Profil berhasil diperbarui.");
       } catch (error) {
         console.error("Error saving profile:", error);
-        // Tampilkan pesan kesalahan kepada pengguna jika terjadi kesalahan
-        alert("Gagal menyimpan profil. Silakan coba lagi.");
+        alert(
+          "Gagal menyimpan profil. Silakan coba lagi. Error: " + error.message
+        );
       }
     }
   };
 
-  const onDrop = (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = () => {
-      setEditedProfileImage(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  function handleChange(e) {
+    // Set file yang dipilih oleh pengguna
+    setFile(e.target.files[0]);
+    // Set gambar yang ditampilkan di preview
+    setEditedProfileImage(URL.createObjectURL(e.target.files[0]));
+  }
 
   return (
     <div>
@@ -88,15 +148,40 @@ function ProfilePopup() {
       {showProfile && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="profile-popup">
+            {isLoggedIn && !isEditing && (
+              <button
+                onClick={() => setShowProfile(false)}
+                className="close-button"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            )}
             <div className="text-center">
-              <div className="image-container" {...getRootProps()}>
-                <input {...getInputProps()} />
+              <div
+                className="image-container"
+                onClick={() => inputRef.current.click()}
+                style={{ cursor: "pointer" }}
+              >
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleChange}
+                />
                 <img
-                  src={isEditing ? editedProfileImage : user.photoURL}
+                  src={
+                    isEditing
+                      ? editedProfileImage
+                      : file
+                      ? URL.createObjectURL(file)
+                      : user.photoURL
+                  }
                   alt="Foto Profil Pengguna"
-                  className="profile-image"
+                  className="profile-image items-center justify-center"
                 />
               </div>
+
               {isEditing ? (
                 <button
                   className="action-button bg-blue-500"
@@ -118,6 +203,7 @@ function ProfilePopup() {
                   type="text"
                   value={editedName}
                   onChange={(e) => setEditedName(e.target.value)}
+                  placeholder="Username"
                 />
                 <button
                   onClick={() => setIsEditing(false)}
@@ -140,14 +226,6 @@ function ProfilePopup() {
                 className="action-button bg-red-500 ml-4"
               >
                 Log Out
-              </button>
-            )}
-            {isLoggedIn && !isEditing && (
-              <button
-                onClick={() => setShowProfile(false)}
-                className="action-button bg-gray-200 ml-4"
-              >
-                Tutup
               </button>
             )}
           </div>

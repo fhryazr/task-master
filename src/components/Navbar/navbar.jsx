@@ -108,7 +108,6 @@ function Navbar() {
             <li>
               {isLoggedIn ? (
                 <a
-                  href="#"
                   className="text-white hover:text-blue-200"
                   onClick={() => {
                     setShowProfile(true); // Menampilkan pop-up profil

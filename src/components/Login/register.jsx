@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
 import { auth, db, provider } from "../../config/FirebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
@@ -13,6 +17,11 @@ const Register = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+
+  const handleEmailChange = () => {
+    // Mengatur emailError menjadi false saat email diubah
+    setEmailError(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +37,16 @@ const Register = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((data) => {
+        // Mengirim email verifikasi
+        sendEmailVerification(auth.currentUser)
+          .then(() => {
+            // Email verifikasi berhasil dikirim
+            alert("Email verifikasi dikirim");
+          })
+          .catch((error) => {
+            console.error("Error mengirim email verifikasi:", error);
+          });
+
         console.log(data, "authData");
 
         const slicingEmail = email.match(/^(.+)@/);
@@ -50,6 +69,7 @@ const Register = () => {
           })
           .catch((err) => {
             console.error(err);
+            setEmailError(true);
           });
 
         console.log(userData);
@@ -57,6 +77,7 @@ const Register = () => {
       })
       .catch((err) => {
         console.error(err);
+        setEmailError(true);
         // setRegister(true);
       });
   };
