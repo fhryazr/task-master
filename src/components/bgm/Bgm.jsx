@@ -1,23 +1,24 @@
 /* eslint-disable react/prop-types */
 import { useState, useRef } from "react";
 import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
-import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
+import { PlayIcon, PauseIcon } from "@heroicons/react/24/solid";
 
 const Bgm = ({ songs }) => {
   const MAX = 20;
 
-  // Gunakan useState untuk mengelola status pemutaran
   const [songStates, setSongStates] = useState(songs.map(() => false));
+  const [songVolumes, setSongVolumes] = useState(songs.map(() => MAX));
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const oceanRefs = songs.map(() => useRef(null));
-
-  
 
   const toggleAudio = (index) => {
     const newSongStates = [...songStates];
     newSongStates[index] = !newSongStates[index];
 
+    console.log(`Song ${index} is ${newSongStates[index] ? "playing" : "paused"}`);
+
+  
     // Berhenti semua lagu terlebih dahulu
     oceanRefs.forEach((ref, i) => {
       if (i !== index) {
@@ -26,7 +27,7 @@ const Bgm = ({ songs }) => {
         newSongStates[i] = false;
       }
     });
-
+  
     // Memutuskan play atau pause untuk lagu yang dipilih
     if (newSongStates[index]) {
       oceanRefs[index].current.play();
@@ -34,15 +35,20 @@ const Bgm = ({ songs }) => {
       oceanRefs[index].current.pause();
       oceanRefs[index].current.currentTime = 0;
     }
-
+  
     setSongStates(newSongStates);
   };
+  
 
   const handleVolume = (e, index) => {
     const value = e.target.value;
-    const volume = Number(value) / MAX;
-    oceanRefs[index].current.volume = volume;
+    const newSongVolumes = [...songVolumes];
+    newSongVolumes[index] = Number(value);
+    oceanRefs[index].current.volume = newSongVolumes[index] / MAX;
+    setSongVolumes(newSongVolumes);
   };
+
+  
 
   return (
     <>
@@ -63,8 +69,7 @@ const Bgm = ({ songs }) => {
                 />
                 <button
                   onClick={() => toggleAudio(index)}
-                  type="button"
-                  className="absolute right-[1px] top-1/2 -translate-y-1/2 w-12 h-12 p-2 rounded-full text-white shadow-sm"
+                  className="absolute right-[1px] top-1/2 -translate-y-1/2 w-12 h-12 p-2 text-white rounded-full"
                 >
                   {!songStates[index] ? (
                     <PlayIcon className="h-8 w-8" aria-hidden="true" />
@@ -85,6 +90,8 @@ const Bgm = ({ songs }) => {
                     min={0}
                     max={MAX}
                     onChange={(e) => handleVolume(e, index)}
+                    value={songVolumes[index]}
+                    data-index={index}
                   />
                 </div>
               </div>

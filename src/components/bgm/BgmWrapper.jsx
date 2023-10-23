@@ -2,13 +2,11 @@ import { useState } from "react";
 import Bgm from "./Bgm";
 
 const BgmWrapper = () => {
-  const [currentMode, setCurrentMode] = useState("BGM");
-
+  const [currentMode, setCurrentMode] = useState("Ambient");
   const modes = {
     bgm: "Ambient",
-    spotify: <p>Spotify<sup>Pro</sup></p>,
-  };
-
+    spotify: <p>Spotify<sup>Pro</sup></p>
+  }
   const songs = [
     {
       title: "Ocean",
@@ -21,16 +19,16 @@ const BgmWrapper = () => {
       imageUrl: "/CalmOceanWaves.png",
     },
     {
-      title: "Ocean",
-      waveType: "Ocean.mp3",
+      title: "Lofi",
+      waveType: "hillside.wav",
       imageUrl: "/CalmOceanWaves.png",
     },
     {
       title: "Fire Crackling",
       waveType: "FireCrackling.m4a",
       imageUrl: "/CalmOceanWaves.png",
-    }
-  ]
+    },
+  ];
 
   const handleModeChange = (mode) => {
     setCurrentMode(mode);
@@ -47,13 +45,16 @@ const BgmWrapper = () => {
               currentMode === modeKey
                 ? "active text-white"
                 : "text-slate-300 hover:text-white"
-            }`}>
+            }`}
+          >
             {modes[modeKey]}
           </button>
         ))}
       </div>
-      <div className="bg-white max-h-[12rem] overflow-y-hidden hover:overflow-y-auto p-4 rounded-lg">
-        <Bgm songs={songs}/>
+      <div className="bg-white h-[12rem] p-2 rounded-lg">
+        <div className="bg-white max-h-[11rem] overflow-y-auto rounded-lg hover:overflow-y-auto hover:rounded-lg">
+          <Bgm songs={songs} />
+        </div>
       </div>
     </div>
   );
