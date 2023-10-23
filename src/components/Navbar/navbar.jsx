@@ -14,7 +14,7 @@ function Navbar() {
   // Access the user data from your AuthContext
   const { currentUser } = useContext(AuthContext);
 
-  const [userProfilePicture, setUserProfilePicture] = useState(null);
+  const [userProfilePicture, setUserProfilePicture] = useState();
 
   useEffect(() => {
     if (showPopover) {
