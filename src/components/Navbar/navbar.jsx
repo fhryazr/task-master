@@ -72,15 +72,13 @@ function Navbar() {
                 href="#"
                 className="text-white hover:text-blue-200"
                 onClick={handlePopoverClick}
-                ref={referenceElement}
-              >
+                ref={referenceElement}>
                 About
               </a>
               {showPopover && (
                 <div
                   className="bg-white border border-gray-300 p-4 rounded-lg shadow-md"
-                  ref={popoverElement}
-                >
+                  ref={popoverElement}>
                   <ul>
                     {options.map((option) => (
                       <li key={option.contentId}>
@@ -90,8 +88,7 @@ function Navbar() {
                           onClick={() => {
                             scrollToContent(option.contentId);
                             setShowPopover(false);
-                          }}
-                        >
+                          }}>
                           {option.label}
                         </a>
                       </li>
@@ -108,20 +105,20 @@ function Navbar() {
             <li>
               {isLoggedIn ? (
                 <a
-                  className="text-white hover:text-blue-200"
+                  className=""
                   onClick={() => {
                     setShowProfile(true); // Menampilkan pop-up profil
-                  }}
-                ></a>
+                  }}>
+                  <ProfilePopup
+                    showProfile={showProfile}
+                    setShowProfile={setShowProfile}
+                  />
+                </a>
               ) : (
                 <a href="login" className="text-white hover:text-blue-200">
                   Login
                 </a>
               )}
-              <ProfilePopup
-                showProfile={showProfile}
-                setShowProfile={setShowProfile}
-              />
             </li>
           </ul>
         </div>
