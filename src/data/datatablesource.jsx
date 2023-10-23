@@ -19,6 +19,11 @@ export const userColumns = [
     width: 230,
   },
   {
+    field: "created",
+    headerName: "Created Timestamp",
+    width: 200,
+  },
+  {
     field: "status",
     headerName: "Status",
     width: 160,
