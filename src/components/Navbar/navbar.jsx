@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
-import { AuthContext } from "../../context/AuthContext"; // Import your AuthContext
-import { db } from "../../config/FirebaseConfig"; // Import your Firebase config
-import { doc, getDoc } from "firebase/firestore";
-import { getAuth, signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+// import { AuthContext } from "../../context/AuthContext"; // Import your AuthContext
+// import { db } from "../../config/FirebaseConfig"; // Import your Firebase config
+// import { doc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+// import { useNavigate } from "react-router-dom";
+import ProfilePopup from "./profil";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
@@ -12,9 +13,11 @@ function Navbar() {
   const popoverElement = useRef(null);
 
   // Access the user data from your AuthContext
-  const { currentUser } = useContext(AuthContext);
+  // const { currentUser } = useContext(AuthContext);
 
-  const [userProfilePicture, setUserProfilePicture] = useState();
+  // const [userProfilePicture, setUserProfilePicture] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     if (showPopover) {
@@ -31,42 +34,18 @@ function Navbar() {
       });
     }
 
-    // Fetch user profile
-    if (currentUser) {
-      const userDocRef = doc(db, "users", currentUser.uid);
-
-      getDoc(userDocRef)
-        .then((docSnapshot) => {
-          if (docSnapshot.exists()) {
-            const userData = docSnapshot.data();
-            setUserProfilePicture(userData.img);
-            // console.log(userProfilePicture);
-
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
-  }, [showPopover, currentUser]);
+    const auth = getAuth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+  }, [showPopover]);
 
   const handlePopoverClick = () => {
     setShowPopover(!showPopover);
-  };
-
-  const { dispatch } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        dispatch({ type: "LOGOUT" });
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   const scrollToContent = (contentId) => {
@@ -93,13 +72,15 @@ function Navbar() {
                 href="#"
                 className="text-white hover:text-blue-200"
                 onClick={handlePopoverClick}
-                ref={referenceElement}>
+                ref={referenceElement}
+              >
                 About
               </a>
               {showPopover && (
                 <div
                   className="bg-white border border-gray-300 p-4 rounded-lg shadow-md"
-                  ref={popoverElement}>
+                  ref={popoverElement}
+                >
                   <ul>
                     {options.map((option) => (
                       <li key={option.contentId}>
@@ -109,7 +90,8 @@ function Navbar() {
                           onClick={() => {
                             scrollToContent(option.contentId);
                             setShowPopover(false);
-                          }}>
+                          }}
+                        >
                           {option.label}
                         </a>
                       </li>
@@ -123,31 +105,24 @@ function Navbar() {
                 Stats
               </a>
             </li>
-            {currentUser ? (
-              <>
-                <li>
-                  <img
-                    src={userProfilePicture || "defaulProfilePicture.jpg"}
-                    alt="Profile Picture"
-                    className="w-8 h-8 rounded-full cursor-pointer"
-                  />
-                </li>
-                <li>
-                  <a
-                    href="/"
-                    onClick={handleLogout}
-                    className="text-white hover:text-blue-200">
-                    Logout
-                  </a>
-                </li>
-              </>
-            ) : (
-              <li>
+            <li>
+              {isLoggedIn ? (
+                <a
+                  className="text-white hover:text-blue-200"
+                  onClick={() => {
+                    setShowProfile(true); // Menampilkan pop-up profil
+                  }}
+                ></a>
+              ) : (
                 <a href="login" className="text-white hover:text-blue-200">
                   Login
                 </a>
-              </li>
-            )}
+              )}
+              <ProfilePopup
+                showProfile={showProfile}
+                setShowProfile={setShowProfile}
+              />
+            </li>
           </ul>
         </div>
       </div>
