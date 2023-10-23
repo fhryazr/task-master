@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Timer from "./Timer";
-import TimerSettingsModal from "./TimerSettingsModal"
+import TimerSettingsModal from "./TimerSettingsModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
 
@@ -36,11 +36,11 @@ const TimerWrapper = () => {
     setIsModalOpen(false);
   };
 
-  const [intervalCount, setIntervalCount] = useState(0)
+  const [intervalCount, setIntervalCount] = useState(0);
 
   const handleTimerComplete = () => {
     // Logika untuk mengganti mode
-    setIntervalCount(intervalCount + 1)
+    setIntervalCount(intervalCount + 1);
 
     // Logika untuk mengganti mode
     if (currentMode === "focus" && intervalCount < 4) {
@@ -61,12 +61,20 @@ const TimerWrapper = () => {
           <button
             key={modeKey}
             onClick={() => handleModeChange(modeKey)}
-            className={`mode-button ${currentMode === modeKey ? "active text-white" : "text-slate-300 hover:text-white"}`}
+            className={`mode-button ${
+              currentMode === modeKey
+                ? "active text-white"
+                : "text-slate-300 hover:text-white"
+            }`}
           >
             {modes[modeKey]}
           </button>
         ))}
-        <FontAwesomeIcon icon={faGear} onClick={handleOpenModal} className="cursor-pointer" />
+        <FontAwesomeIcon
+          icon={faGear}
+          onClick={handleOpenModal}
+          className="cursor-pointer"
+        />
       </div>
       <Timer
         mode={currentMode}

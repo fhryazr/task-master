@@ -1,0 +1,27 @@
+/* CSS untuk mengganti tampilan scrollbar */
+.faq::-webkit-scrollbar {
+  width: 8px; /* Lebar scrollbar */
+}
+
+.faq::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Warna thumb (bagian yang dapat digerakkan) */
+  border-radius: 4px; /* Sudut border thumb */
+}
+
+.faq::-webkit-scrollbar-thumb:hover {
+  background-color: white; /* Warna thumb saat dihover */
+}
+
+.faq::-webkit-scrollbar-track {
+  background-color: transparent; /* Warna track (bagian yang tidak dapat digerakkan) */
+}
+
+.faq {
+  opacity: 0; /* Elemen tidak terlihat */
+  transition: opacity 0.5s ease-in-out; /* Efek transisi opacity */
+}
+
+/* Gaya untuk elemen FAQ yang akan fade-in saat terlihat di layar */
+.faq.fade-in {
+  opacity: 1;
+}
