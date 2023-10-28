@@ -9,7 +9,7 @@ import "../App.css";
 function HomePage() {
   return (
     <>
-      <div className="w-screen">
+      <div className={`w-screen`}>
         <div className="top-0 sticky z-50">
           <Navbar />
         </div>
