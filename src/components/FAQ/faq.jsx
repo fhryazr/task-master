@@ -26,12 +26,12 @@ const data = {
 
 const styles = {
   bgColor: "transparent",
-  titleTextColor: "white",
-  rowTitleColor: "white",
-  rowContentColor: "white",
+  titleTextColor: "black",
+  rowTitleColor: "black",
+  rowContentColor: "black",
   titleTextSize: "20px",
   // rowTitleSize: "16px",
-  arrowColor: "white",
+  arrowColor: "black",
 };
 
 const config = {

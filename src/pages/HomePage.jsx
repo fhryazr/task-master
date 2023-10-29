@@ -9,7 +9,7 @@ import "../App.css";
 function HomePage() {
   return (
     <>
-      <div className={`w-screen`}>
+      <div className={`App`}>
         <div className="top-0 sticky z-50">
           <Navbar />
         </div>
@@ -19,7 +19,7 @@ function HomePage() {
           </div>
           <TodoWrapperLocalStorage />
         </div>
-        <div className="Bottom flex flex-col items-center">
+        <div className="Bottom bg-white w-screen flex flex-col items-center">
           <div id="about-us">
             <AboutUs />
           </div>

@@ -30,12 +30,31 @@ const BackgroundColorChanger = () => {
       label: "Yellow",
       color: "bg-gradient-to-tr from-gray-800 via-gray-600 to-gray-400",
     },
+    {
+      label: "Ruangan",
+      color: "url('/public/bg-ruang-kelas.png')",
+    },
+    {
+      label: "Pegunungan",
+      color: "url('/public/2246711.jpg')",
+    },
+    {
+      label: "Semi",
+      color: "url('/public/pxfuel (1).jpg')",
+    },
   ];
 
   const changeBackgroundColor = (color) => {
     setBackgroundColor(color.color);
-    document.body.className = color.color;
-    localStorage.setItem("selectedColor", color.color); // Simpan warna yang dipilih di penyimpanan lokal
+    if (color.color.startsWith("url(")) {
+      // Jika background yang dipilih adalah gambar
+      document.body.style.backgroundImage = color.color;
+    } else {
+      // Jika background yang dipilih adalah warna
+      document.body.style.backgroundImage = "";
+      document.body.className = color.color;
+    }
+    localStorage.setItem("selectedColor", color.color);
     setShowColorOptions(false);
   };
 
@@ -44,11 +63,17 @@ const BackgroundColorChanger = () => {
   };
 
   useEffect(() => {
-    // Cek penyimpanan lokal saat komponen dimuat
     const savedColor = localStorage.getItem("selectedColor");
     if (savedColor) {
       setBackgroundColor(savedColor);
-      document.body.className = savedColor;
+      if (savedColor.startsWith("url(")) {
+        // Jika background yang disimpan adalah gambar
+        document.body.style.backgroundImage = savedColor;
+      } else {
+        // Jika background yang disimpan adalah warna
+        document.body.style.backgroundImage = "";
+        document.body.className = savedColor;
+      }
     }
   }, []);
 
