@@ -13,10 +13,13 @@ function ProfilePopup() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState();
-  const [editedProfileImage, setEditedProfileImage] = useState("defaultProfilePicture.jpg");
+  const [editedProfileImage, setEditedProfileImage] = useState(
+    "defaultProfilePicture.jpg"
+  );
   const [user, setUser] = useState(null);
   const { dispatch } = useContext(AuthContext);
   const [file, setFile] = useState();
+  const [showImagePopup, setShowImagePopup] = useState(false);
   const inputRef = useRef();
   const storage = getStorage();
 
@@ -66,6 +69,8 @@ function ProfilePopup() {
     if (user) {
       try {
         if (file) {
+          setIsEditing(false);
+
           // Jika ada file gambar yang diunggah, unggah ke Firebase Storage
           const storageRef = ref(
             storage,
@@ -98,7 +103,9 @@ function ProfilePopup() {
         alert("Profil berhasil diperbarui.");
       } catch (error) {
         console.error("Error saving profile:", error);
-        alert("Gagal menyimpan profil. Silakan coba lagi. Error: " + error.message);
+        alert(
+          "Gagal menyimpan profil. Silakan coba lagi. Error: " + error.message
+        );
       }
     }
   };
@@ -111,32 +118,35 @@ function ProfilePopup() {
   }
 
   return (
-    <div>
-      {isLoggedIn ? (
+    <div className="flex">
+      {isLoggedIn && (
         <button
           className="text-white hover:text-blue-200"
-          onClick={() => setShowProfile(!showProfile)}
-        >
-          Profile
+          onClick={() => setShowProfile(!showProfile)}>
+          <div className="relative">
+            <img
+              src={editedProfileImage}
+              alt="Profile"
+              className="w-9 h-9 rounded-full"
+            />
+          </div>
         </button>
-      ) : null}
+      )}
       {showProfile && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="profile-popup">
             {isLoggedIn && !isEditing && (
-              <button
+              <div
                 onClick={() => setShowProfile(false)}
-                className="close-button"
-              >
+                className="close-button flex justify-end">
                 <FontAwesomeIcon icon={faTimes} />
-              </button>
+              </div>
             )}
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center justify-center">
               <div
                 className="image-container"
-                onClick={() => inputRef.current.click()}
-                style={{ cursor: "pointer" }}
-              >
+                onClick={() => isEditing && inputRef.current.click()}
+                style={{ cursor: "pointer" }}>
                 <input
                   ref={inputRef}
                   type="file"
@@ -154,55 +164,66 @@ function ProfilePopup() {
                   }
                   alt="Foto Profil Pengguna"
                   className="profile-image items-center justify-center"
+                  onClick={() => !isEditing && setShowImagePopup(true)}
                 />
               </div>
-
-              {isEditing ? (
-                <button
-                  className="action-button bg-blue-500"
-                  onClick={handleSaveProfile}
-                >
-                  Simpan Profil
-                </button>
-              ) : (
-                <h3 className="text-xl font-semibold mt-2">
-                  {editedName}
-                </h3>
-              )}
+              <h3 className="text-xl font-semibold mt-2">{editedName}</h3>
               <p className="text-gray-600">{user.email}</p>
+              {showImagePopup && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                  <div className="popup-image">
+                    <img
+                      src={editedProfileImage}
+                      alt="Gambar Profil"
+                      className="popup-image-content"
+                    />
+                    <button
+                      onClick={() => setShowImagePopup(false)}
+                      className="popup-close-button">
+                      <FontAwesomeIcon icon={faTimes} />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             <hr className="my-4" />
-            {isEditing ? (
-              <div>
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  placeholder="Username"
-                />
+            <div className="flex justify-center">
+              {isEditing ? (
+                <div className="flex flex-col w-full">
+                  <input
+                    type="text"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                    placeholder="Username"
+                  />
+                  <div className="flex justify-center gap-3">
+                    <button
+                      className="action-button bg-blue-500"
+                      onClick={handleSaveProfile}>
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="action-button bg-red-500">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <button
-                  onClick={() => setIsEditing(false)}
-                  className="action-button bg-gray-200"
-                >
-                  Batal
+                  onClick={handleEditProfile}
+                  className="action-button bg-blue-500">
+                  Edit Profil
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={handleEditProfile}
-                className="action-button bg-blue-500"
-              >
-                Edit Profil
-              </button>
-            )}
-            {isLoggedIn && !isEditing && (
-              <button
-                onClick={handleLogout}
-                className="action-button bg-red-500 ml-4"
-              >
-                Log Out
-              </button>
-            )}
+              )}
+              {isLoggedIn && !isEditing && (
+                <button
+                  onClick={handleLogout}
+                  className="action-button bg-red-500 ml-4">
+                  Log Out
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
