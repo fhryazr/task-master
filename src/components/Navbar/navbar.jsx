@@ -1,21 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
-// import { AuthContext } from "../../context/AuthContext"; // Import your AuthContext
-// import { db } from "../../config/FirebaseConfig"; // Import your Firebase config
-// import { doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-// import { useNavigate } from "react-router-dom";
 import ProfilePopup from "./profil";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
-
-  // Access the user data from your AuthContext
-  // const { currentUser } = useContext(AuthContext);
-
-  // const [userProfilePicture, setUserProfilePicture] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -62,7 +53,7 @@ function Navbar() {
   ];
 
   return (
-    <nav className="bg-white-500 py-2 w-full">
+    <nav className={`py-2 w-full`}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <div className="text-white text-xl font-semibold">Task Master</div>

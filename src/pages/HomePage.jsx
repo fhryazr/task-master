@@ -11,7 +11,7 @@ function HomePage() {
   return (
     <>
       <div className="App">
-        <div className="top-0 sticky z-50">
+        <div className="top-0 z-50">
           <Navbar />
         </div>
         <div className="Top h-screen flex flex-col justify-center items-center mb-4">
