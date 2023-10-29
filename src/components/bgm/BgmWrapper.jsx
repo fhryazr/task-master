@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Bgm from "./Bgm";
+import SpotifyAuth from "./SpotifyAuth";
 
 const BgmWrapper = () => {
-  const [currentMode, setCurrentMode] = useState("Ambient");
+  const [currentMode, setCurrentMode] = useState("bgm");
   const modes = {
     bgm: "Ambient",
-    spotify: <p>Spotify<sup>Pro</sup></p>
-  }
+    spotify: "SpotifyPro",
+  };
+
   const songs = [
     {
       title: "Ocean",
@@ -53,7 +55,11 @@ const BgmWrapper = () => {
       </div>
       <div className="bg-white h-[12rem] p-2 rounded-lg">
         <div className="bg-white max-h-[11rem] overflow-y-auto rounded-lg hover:overflow-y-auto hover:rounded-lg">
-          <Bgm songs={songs} />
+          {currentMode === "bgm" ? (
+            <Bgm songs={songs} />
+          ) : currentMode === "spotify" ? (
+            <SpotifyAuth />
+          ) : null}
         </div>
       </div>
     </div>
