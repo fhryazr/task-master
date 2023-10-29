@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
 import { getAuth } from "firebase/auth";
 import ProfilePopup from "./profil";
+import BackgroundColorChanger from "../Background/background";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
@@ -58,6 +59,9 @@ function Navbar() {
         <div className="flex items-center justify-between">
           <div className="text-white text-xl font-semibold">Task Master</div>
           <ul className="flex items-center space-x-4">
+            <li>
+              <BackgroundColorChanger />
+            </li>
             <li>
               <a
                 href="#"

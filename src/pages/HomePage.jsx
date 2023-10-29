@@ -1,9 +1,9 @@
-import TodoWrapperLocalStorage from "../components/Task/TodoWrapperLocalStorage";
+import Navbar from "../components/Navbar/navbar";
 import TimerWrapper from "../components/Timer/TimerWrapper";
+import TodoWrapperLocalStorage from "../components/Task/TodoWrapperLocalStorage";
 import AboutUs from "../components/About_Me/about";
 import Tutorial from "../components/Tutorial/tutorial";
 import FaQ from "../components/FAQ/faq";
-import Navbar from "../components/Navbar/navbar";
 import "../App.css";
 import BgmWrapper from "../components/bgm/BgmWrapper";
 
