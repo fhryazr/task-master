@@ -4,7 +4,7 @@ import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { PlayIcon, PauseIcon } from "@heroicons/react/24/solid";
 
 const Bgm = ({ songs }) => {
-  const MAX = 20;
+  const MAX = 50;
 
   const [songStates, setSongStates] = useState(songs.map(() => false));
   const [songVolumes, setSongVolumes] = useState(songs.map(() => MAX));
