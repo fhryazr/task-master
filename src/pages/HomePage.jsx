@@ -21,7 +21,7 @@ function HomePage() {
           </div>
           <TodoWrapperLocalStorage />
         </div>
-        <div className="Bottom flex flex-col justify-center items-center gap-5">
+        <div className="Bottom bg-white w-screen flex flex-col justify-center items-center gap-5">
           <div className="mt-4" id="about-us">
             <AboutUs />
           </div>

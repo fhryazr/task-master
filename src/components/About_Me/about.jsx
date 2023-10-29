@@ -46,7 +46,7 @@ const AboutUs = () => {
         What&apos;s more? It keeps a watchful eye on your productivity
         statistics.
       </p>
-      <p className="display block mt-5 text-white">
+      <p className="display block mt-5 text-black">
         Say goodbye to those chaotic to-do lists and disorganized schedules.
         TaskMaster is here to transform the way you work and live. Our mission
         is crystal clear: to empower you to be at your best. We believe that
@@ -54,7 +54,7 @@ const AboutUs = () => {
         achieving your goals, realizing your dreams, and unlocking your true
         potential.
       </p>
-      <p className="display block mt-5 text-white">
+      <p className="display block mt-5 text-black">
         With TaskMaster, you&apos;re not just managing time; you&apos;re
         mastering it. Join us on this journey to boost your efficiency, own your
         schedule, and supercharge your success. It&apos;s time to unleash your
