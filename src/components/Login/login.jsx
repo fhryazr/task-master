@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./style.css";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/FirebaseConfig";
 
 function Login() {
@@ -56,36 +56,51 @@ function Login() {
     navigate("/register");
   };
 
+  const checkIfUserExists = async (user) => {
+    const userDocRef = doc(db, "users", user.uid);
+  
+    try {
+      const docSnapshot = await getDoc(userDocRef);
+      return docSnapshot.exists();
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+      return false;
+    }
+  };
+  
+
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // console.log(result);
+        const isUserExist = await checkIfUserExists(result.user);
+
         dispatch({ type: "LOGIN", payload: result.user });
-        const slicingEmail = result.user.email.match(/^(.+)@/);
-        const userData = {
-          displayName: result.user.displayName,
-          username: slicingEmail[1],
-          email: result.user.email,
-          roles: "user",
-          img: result.user.photoURL,
-        };
-
-        const userDocRef = doc(db, "users", result.user.uid);
-
-        // Gunakan setDoc untuk menambahkan data ke dokumen
-        setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-
-        // console.log(userData)
+        if (!isUserExist) {
+          const slicingEmail = result.user.email.match(/^(.+)@/);
+          const userData = {
+            displayName: result.user.displayName,
+            username: slicingEmail[1],
+            email: result.user.email,
+            roles: "user",
+            img: result.user.photoURL,
+          };
+          
+          const userDocRef = doc(db, "users", result.user.uid);
+          
+          // Gunakan setDoc untuk menambahkan data ke dokumen
+          try {
+            await setDoc(userDocRef, userData)
+          } catch (error) {
+            console.log(error)
+          }
+        }
+          
+          // console.log(userData)
         navigate("/");
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
