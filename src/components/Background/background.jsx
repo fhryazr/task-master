@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
+// Menginisialisasi state untuk warna latar belakang dan opsi tampilan warna
 const BackgroundColorChanger = () => {
   const [backgroundColor, setBackgroundColor] = useState(
     localStorage.getItem("selectedColor") ||
@@ -8,44 +10,56 @@ const BackgroundColorChanger = () => {
 
   const [showColorOptions, setShowColorOptions] = useState(false);
 
+  // Daftar warna dan gambar latar belakang
   const colors = [
     {
-      label: "Purple",
+      label: "linear-gradient(to top right, #8B5CF6, #5A3FAC, #38B2AC)",
       color:
         "bg-gradient-to-tr from-purple-700 via-purple-500 to-cyan-400 to-90%",
     },
     {
-      label: "Pink",
+      label: "linear-gradient(to top right, #F472A7, #F273B2, #9864A3)",
       color: "bg-gradient-to-tr from-pink-400 via-pink-300 to-purple-600",
     },
     {
-      label: "Red",
+      label: "linear-gradient(to top right, #DD4B4B, #C84141, #AA2929)",
       color: "bg-gradient-to-tr from-red-800 via-red-600 to-red-400",
     },
     {
-      label: "Green",
+      label: "linear-gradient(to top right, #68D391, #4BBF81, #3086A0)",
       color: "bg-gradient-to-tr from-green-400 via-green-300 to-blue-500",
     },
     {
-      label: "Yellow",
+      label: "linear-gradient(to top right, #808080, #606060, #404040)",
       color: "bg-gradient-to-tr from-gray-800 via-gray-600 to-gray-400",
     },
     {
-      label: "Ruangan",
-      color: "url('/public/bg-ruang-kelas.png')",
+      label: "url('/bg-ruang-kelas.png')",
+      color: "url('/bg-ruang-kelas.png')",
     },
     {
-      label: "Pegunungan",
-      color: "url('/public/2246711.jpg')",
+      label: "url('/2246711.jpg')",
+      color: "url('/2246711.jpg')",
     },
     {
-      label: "Semi",
-      color: "url('/public/pxfuel (1).jpg')",
+      label: "url('/pxfuel (1).jpg')",
+      color: "url('/pxfuel (1).jpg')",
+    },
+    {
+      label: "url('/malam.jpg')",
+      color: "url('/malam.jpg')",
+    },
+    {
+      label: "url('/pxfuel (1).jpg')",
+      color: "url('/pxfuel (1).jpg')",
     },
   ];
 
+  // Fungsi untuk mengganti warna latar belakang
   const changeBackgroundColor = (color) => {
+    // Memperbarui state latar belakang
     setBackgroundColor(color.color);
+    // Mengatur latar belakang berdasarkan pilihan warna atau gambar
     if (color.color.startsWith("url(")) {
       // Jika background yang dipilih adalah gambar
       document.body.style.backgroundImage = color.color;
@@ -54,17 +68,20 @@ const BackgroundColorChanger = () => {
       document.body.style.backgroundImage = "";
       document.body.className = color.color;
     }
-    localStorage.setItem("selectedColor", color.color);
+    Cookies.set("selectedColor", color.color, { expires: 365 }); // Simpan pilihan dalam cookie, dengan masa berlaku 365 hari
     setShowColorOptions(false);
   };
 
+  // Fungsi untuk menampilkan/sembunyikan opsi warna
   const toggleColorOptions = () => {
     setShowColorOptions(!showColorOptions);
   };
 
+  // Mengambil warna latar belakang yang disimpan dalam cookie saat komponen dimuat
   useEffect(() => {
-    const savedColor = localStorage.getItem("selectedColor");
+    const savedColor = Cookies.get("selectedColor");
     if (savedColor) {
+      // Memperbarui state latar belakang
       setBackgroundColor(savedColor);
       if (savedColor.startsWith("url(")) {
         // Jika background yang disimpan adalah gambar
@@ -87,7 +104,7 @@ const BackgroundColorChanger = () => {
       </button>
       {showColorOptions && (
         <div className="absolute right-0 top-10">
-          <div className="bg-white p-2 rounded-lg shadow-md flex space-x-2">
+          <div className="bg-white p-2 rounded-lg shadow-md grid grid-cols-5 space-x-2 w-[20vw] items-center">
             {colors.map((color, index) => (
               <div
                 key={index}
@@ -96,17 +113,17 @@ const BackgroundColorChanger = () => {
               >
                 <div
                   style={{
-                    background: color.color,
+                    background: color.label,
                     border:
                       color.color === backgroundColor
-                        ? "2px solid white"
-                        : "2px solid",
+                        ? "2px solid blue"
+                        : "2px solid white",
                     cursor: "pointer",
                   }}
-                  className="w-10 h-10 rounded-full"
+                  className={`w-10 h-10 rounded-full`}
                 ></div>
                 <div className="absolute top-0 left-0 p-2 text-black font-bold cursor-pointer">
-                  {index + 1}
+                  {color.name}
                 </div>
               </div>
             ))}

@@ -1,10 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
-// import { AuthContext } from "../../context/AuthContext"; // Import your AuthContext
-// import { db } from "../../config/FirebaseConfig"; // Import your Firebase config
-// import { doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-// import { useNavigate } from "react-router-dom";
 import ProfilePopup from "./profil";
 import BackgroundColorChanger from "../Background/background";
 
@@ -12,11 +8,6 @@ function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
-
-  // Access the user data from your AuthContext
-  // const { currentUser } = useContext(AuthContext);
-
-  // const [userProfilePicture, setUserProfilePicture] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
