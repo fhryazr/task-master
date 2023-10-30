@@ -30,9 +30,9 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "order":
+    case "subcription":
       data = {
-        title: "ORDERS",
+        title: "SUBSCRIPTION",
         isMoney: false,
         link: "View all orders",
         icon: (

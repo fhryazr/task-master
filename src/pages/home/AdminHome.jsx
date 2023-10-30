@@ -1,5 +1,4 @@
 import Sidebar from "../../components/Admin/sidebar/Sidebar";
-import Navbar from "../../components/Admin/navbar/Navbar";
 import "./adminhome.scss";
 import Widget from "../../components/Admin/widget/Widget";
 import Featured from "../../components/Admin/featured/Featured";
@@ -11,10 +10,9 @@ const AdminHome = () => {
     <div className="home w-screen">
       <Sidebar />
       <div className="homeContainer">
-        <Navbar />
         <div className="widgets">
           <Widget type="user" />
-          <Widget type="order" />
+          <Widget type="subcription" />
           <Widget type="earning" />
         </div>
         <div className="charts">

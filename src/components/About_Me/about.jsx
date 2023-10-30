@@ -38,6 +38,27 @@ const AboutUs = () => {
         solution with task management, Pomodoro technique integration, and
         monitoring of productivity statistics. TaskMaster aims to improve user
         productivity and performance in work and daily activities.
+        TaskMaster is not just your ordinary task and time management platform
+        it&apos;s a productivity powerhouse! Whether you&apos;re a solo worker
+        looking to streamline your day or part of a dynamic team, TaskMaster has
+        your back. This web-based solution is your gateway to enhanced task
+        management, seamlessly integrated with the Pomodoro technique.
+        What&apos;s more? It keeps a watchful eye on your productivity
+        statistics.
+      </p>
+      <p className="display block mt-5 text-black">
+        Say goodbye to those chaotic to-do lists and disorganized schedules.
+        TaskMaster is here to transform the way you work and live. Our mission
+        is crystal clear: to empower you to be at your best. We believe that
+        productivity isn&apos;t just about ticking off tasks; it&apos;s about
+        achieving your goals, realizing your dreams, and unlocking your true
+        potential.
+      </p>
+      <p className="display block mt-5 text-black">
+        With TaskMaster, you&apos;re not just managing time; you&apos;re
+        mastering it. Join us on this journey to boost your efficiency, own your
+        schedule, and supercharge your success. It&apos;s time to unleash your
+        inner TaskMaster!
       </p>
     </div>
   );

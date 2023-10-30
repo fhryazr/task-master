@@ -11,7 +11,7 @@ import { db } from "../../../config/FirebaseConfig";
 
 const Datatable = ({ List_Title }) => {
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
     // const fetchData = async () => {
     //   let list = [];
@@ -62,9 +62,10 @@ const Datatable = ({ List_Title }) => {
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
+        const userId = params.row.id;
         return (
           <div className="cellAction">
-            <Link to=":userId" style={{ textDecoration: "none" }}>
+            <Link to={`detail/${userId}`} style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
             <div
@@ -90,9 +91,12 @@ const Datatable = ({ List_Title }) => {
         className="datagrid"
         rows={data}
         columns={userColumns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
+        pageSize={1}
+        rowsPerPageOptions={[1]}
         checkboxSelection
+        getRowClassName={(params) =>
+          params.index % 2 === 0 ? "even:bg-white" : "odd:bg-gray-100"
+        }
       />
     </div>
   );

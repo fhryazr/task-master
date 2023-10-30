@@ -57,7 +57,7 @@ const Register = () => {
           email: data.user.email,
           password: password,
           roles: "user",
-          img: null,
+          img: "defaulProfilePicture.jpg",
         };
 
         const userDocRef = doc(db, "users", data.user.uid);
@@ -73,7 +73,7 @@ const Register = () => {
           });
 
         console.log(userData);
-        // navigate("/login");
+        navigate("/login");
       })
       .catch((err) => {
         console.error(err);
