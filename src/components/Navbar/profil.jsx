@@ -14,7 +14,7 @@ function ProfilePopup() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState();
   const [editedProfileImage, setEditedProfileImage] = useState(
-    "defaultProfilePicture.jpg"
+    "No_Profile_Picture.jpg"
   );
   const [user, setUser] = useState(null);
   const { dispatch } = useContext(AuthContext);
