@@ -53,7 +53,7 @@ const TimerWrapper = () => {
       setCurrentMode("focus");
     }
   };
-
+  // console.log(isModalOpen)
   return (
     <div className="TimerWrapper">
       <div className="mode-buttons flex justify-around items-center font-semibold text-white mb-2 text-lg">

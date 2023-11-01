@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
@@ -36,9 +36,14 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
 
   const handleSave = () => {
     // Validasi agar nilai tidak kurang dari 0.1
-    const focus = parseFloat(focusDuration) >= 0.1 ? parseFloat(focusDuration) : 0;
-    const shortBreak = parseFloat(shortBreakDuration) >= 0.1 ? parseFloat(shortBreakDuration) : 0;
-    const longBreak = parseFloat(longBreakDuration) >= 0.1 ? parseFloat(longBreakDuration) : 0;
+    const focus =
+      parseFloat(focusDuration) >= 0.1 ? parseFloat(focusDuration) : 0;
+    const shortBreak =
+      parseFloat(shortBreakDuration) >= 0.1
+        ? parseFloat(shortBreakDuration)
+        : 0;
+    const longBreak =
+      parseFloat(longBreakDuration) >= 0.1 ? parseFloat(longBreakDuration) : 0;
 
     // Simpan pengaturan yang diperbarui ke dalam objek
     const updatedSettings = {
@@ -57,15 +62,13 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
   return (
     <div>
       {isOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-30">
           <div
             ref={modalRef}
-            className="modal relative flex justify-center items-center"
-          >
-            <div className="modal-content bg-white flex flex-col justify-center items-center absolute z-[999] w-[30vw] p-5 gap-4 rounded-lg shadow-md">
+            className="relative flex justify-center items-center">
+            <div className="bg-white flex flex-col justify-center items-center absolute z-50 w-[30vw] p-5 gap-4 rounded-lg shadow-md">
               <h2>Timer Settings (minutes)</h2>
-              <div className="timer-setting w-full  flex justify-center gap-8">
-                {/* focus duration setting */}
+              <div className="w-full flex justify-center gap-8">
                 <div className="focus-timer flex flex-col items-center gap-1">
                   <label className="w-[7rem]">Focus :</label>
                   <input
@@ -75,9 +78,6 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
                     onChange={(e) => setFocusDuration(e.target.value)}
                   />
                 </div>
-                {/* focus duration setting end */}
-
-                {/* shortBreak duration setting */}
                 <div className="short-timer flex flex-col items-center gap-1">
                   <label className="w-[7rem]">Short Break :</label>
                   <input
@@ -87,9 +87,6 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
                     onChange={(e) => setShortBreakDuration(e.target.value)}
                   />
                 </div>
-                {/* shortBreak duration end */}
-
-                {/* long break duration setting */}
                 <div className="short-timer flex flex-col items-center gap-1">
                   <label className="w-[7rem]">Long Break :</label>
                   <input
@@ -99,10 +96,7 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
                     onChange={(e) => setLongBreakDuration(e.target.value)}
                   />
                 </div>
-                {/* long break duration setting end*/}
               </div>
-
-              {/* button setting */}
               <div className="btn-timer-setting flex gap-3">
                 <button
                   type="submit"
@@ -112,7 +106,6 @@ const TimerSettingsModal = ({ isOpen, onClose, onSave, settings }) => {
                 </button>
                 <button onClick={onClose}>Cancel</button>
               </div>
-              {/* button setting end */}
             </div>
           </div>
         </div>
