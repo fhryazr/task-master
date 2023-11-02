@@ -17,7 +17,7 @@ export const TodoForm = ({ addTodo }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="TodoForm flex flex-col w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
+      className="TodoForm flex flex-col items-center w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
       <div className="w-full">
         {/* form input untuk menambahkan tugas */}
         <input
