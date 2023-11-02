@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // TodoWrapperLocalStorage.js
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { TodoForm } from "./TodoForm";
 import { v4 as uuidv4 } from "uuid";
 import { Todo } from "./Todo";
 import { EditTodoForm } from "./EditTodoForm";
 import { db } from "../../config/FirebaseConfig";
 import Cookies from "js-cookie";
+import { AuthContext } from "../../context/AuthContext";
 import {
   addDoc,
   collection,
@@ -24,10 +25,13 @@ import {
 uuidv4();
 
 const TodoWrapperLocalStorage = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  // const [user, setUser] = useState(null);
   const [completedTodos, setCompletedTodos] = useState(0);
   const [selectedTask, setSelectedTask] = useState(null);
   const [todos, setTodos] = useState([]);
+
+  const { currentUser } = useContext(AuthContext);
+  const user = currentUser;
 
   const getTodosFromFirestore = useCallback(async () => {
     if (user) {
@@ -83,18 +87,18 @@ const TodoWrapperLocalStorage = () => {
   };
 
   const fetchTodoData = useCallback(async () => {
-    if (user) {
+    if (user!=null) {
       const userTodos = await getTodos();
       setTodos(userTodos);
     } else {
       const localTodos = JSON.parse(localStorage.getItem("todos")) || [];
       setTodos(localTodos);
     }
-  }, [getTodos, user]);
+  }, [user]);
 
   useEffect(() => {
     fetchTodoData();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const completedCount = todos.filter((todo) => todo.completed).length;
@@ -358,17 +362,6 @@ const TodoWrapperLocalStorage = () => {
     // Set jumlah tugas yang telah selesai menjadi 0
     setCompletedTodos(0);
   };
-  
-
-  // const clearCompleted = () => {
-  //   if (completedTodos === 0) {
-  //     alert("belum ada tugas yang selesai");
-  //   }
-  //   const unclearTodos = todos.filter((todo) => !todo.completed);
-  //   setTodos(unclearTodos);
-  //   saveTodosToLocalStorage(unclearTodos);
-  //   setCompletedTodos(0);
-  // };
 
   return (
     <div className="TodoWrapper container w-[95vw] sm:w-[70vw] lg:w-[50vw]">
