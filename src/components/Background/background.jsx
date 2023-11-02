@@ -32,15 +32,15 @@ const BackgroundColorChanger = () => {
     },
     {
       label: "Ruangan",
-      color: "url('/public/bg-ruang-kelas.png')",
+      color: "url('/bg-ruang-kelas.png')",
     },
     {
       label: "Pegunungan",
-      color: "url('/public/2246711.jpg')",
+      color: "url('/2246711.jpg')",
     },
     {
       label: "Semi",
-      color: "url('/public/pxfuel (1).jpg')",
+      color: "url('/pxfuel (1).jpg')",
     },
   ];
 
