@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { createPopper } from "@popperjs/core";
 import { getAuth } from "firebase/auth";
 import ProfilePopup from "./profil";
+import StatsModal from "./StatsModal";
 import BackgroundColorChanger from "../Background/background";
 
 function Navbar() {
@@ -10,6 +11,15 @@ function Navbar() {
   const popoverElement = useRef(null);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false);
+
+  const openStatsModal = () => {
+    setShowStatsModal(true);
+  };
+
+  const closeStatsModal = () => {
+    setShowStatsModal(false);
+  };
 
   useEffect(() => {
     if (showPopover) {
@@ -57,7 +67,10 @@ function Navbar() {
     <nav className={`py-2 w-full`}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="text-white text-xl font-semibold">Task Master</div>
+          <div className="text-white text-xl font-semibold md:hidden">TM</div>
+          <div className="text-white text-xl font-semibold hidden md:block">
+            Task Master
+          </div>
           <ul className="flex items-center space-x-4">
             <li>
               <BackgroundColorChanger />
@@ -93,10 +106,15 @@ function Navbar() {
               )}
             </li>
             <li>
-              <a href="" className="text-white hover:text-blue-200">
+              <a
+                href="#"
+                className="text-white hover:text-blue-200"
+                onClick={openStatsModal}>
                 Stats
               </a>
+              <StatsModal show={showStatsModal} onClose={closeStatsModal} />
             </li>
+
             <li>
               {isLoggedIn ? (
                 <a

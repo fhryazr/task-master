@@ -34,7 +34,7 @@ const BgmWrapper = () => {
   };
 
   return (
-    <div className="flex flex-col w-[50vh]">
+    <div className="flex flex-col w-[95vw] sm:w-[60vw] lg:w-[30vw] xl:w-[22vw]">
       <div className="mode-buttons flex justify-evenly items-center font-semibold text-white mb-2 text-lg">
         {Object.keys(modes).map((modeKey) => (
           <button

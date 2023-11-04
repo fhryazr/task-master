@@ -114,8 +114,6 @@ const TodoWrapperLocalStorage = () => {
       isEditing: false,
     };
 
-    
-
     if (user) {
       const userId = user.uid;
 
