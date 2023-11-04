@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import Subscription from "./subscription";
 
 function ProfilePopup() {
   const [showProfile, setShowProfile] = useState(false);
@@ -22,6 +23,8 @@ function ProfilePopup() {
   const [showImagePopup, setShowImagePopup] = useState(false);
   const inputRef = useRef();
   const storage = getStorage();
+  // eslint-disable-next-line no-unused-vars
+  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     const fetchUserProfileData = async () => {
@@ -40,6 +43,7 @@ function ProfilePopup() {
             const userData = docSnapshot.data();
             setEditedProfileImage(userData.img);
             setEditedName(userData.displayName);
+            setIsPremium(userData.isPremium);
           }
         } catch (error) {
           console.error("Error fetching user document:", error);
@@ -122,7 +126,8 @@ function ProfilePopup() {
       {isLoggedIn && (
         <button
           className="text-white hover:text-blue-200"
-          onClick={() => setShowProfile(!showProfile)}>
+          onClick={() => setShowProfile(!showProfile)}
+        >
           <div className="relative">
             <img
               src={editedProfileImage}
@@ -138,7 +143,8 @@ function ProfilePopup() {
             {isLoggedIn && !isEditing && (
               <div
                 onClick={() => setShowProfile(false)}
-                className="close-button flex justify-end">
+                className="close-button flex justify-end"
+              >
                 <FontAwesomeIcon icon={faTimes} />
               </div>
             )}
@@ -146,7 +152,8 @@ function ProfilePopup() {
               <div
                 className="image-container"
                 onClick={() => isEditing && inputRef.current.click()}
-                style={{ cursor: "pointer" }}>
+                style={{ cursor: "pointer" }}
+              >
                 <input
                   ref={inputRef}
                   type="file"
@@ -179,7 +186,8 @@ function ProfilePopup() {
                     />
                     <button
                       onClick={() => setShowImagePopup(false)}
-                      className="popup-close-button">
+                      className="popup-close-button"
+                    >
                       <FontAwesomeIcon icon={faTimes} />
                     </button>
                   </div>
@@ -199,12 +207,14 @@ function ProfilePopup() {
                   <div className="flex justify-center gap-3">
                     <button
                       className="action-button bg-blue-500"
-                      onClick={handleSaveProfile}>
+                      onClick={handleSaveProfile}
+                    >
                       Save
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="action-button bg-red-500">
+                      className="action-button bg-red-500"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -212,19 +222,22 @@ function ProfilePopup() {
               ) : (
                 <button
                   onClick={handleEditProfile}
-                  className="action-button bg-blue-500">
+                  className="action-button bg-blue-500"
+                >
                   Edit Profil
                 </button>
               )}
               {isLoggedIn && !isEditing && (
                 <button
                   onClick={handleLogout}
-                  className="action-button bg-red-500 ml-4">
+                  className="action-button bg-red-500 ml-4"
+                >
                   Log Out
                 </button>
               )}
             </div>
           </div>
+          <Subscription />
         </div>
       )}
     </div>

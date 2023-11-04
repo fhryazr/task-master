@@ -11,7 +11,7 @@ import { db } from "../../config/FirebaseConfig";
 function Login() {
   const [setLogin] = useState(false);
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
+  const [loginAttempts, setLoginAttempts] = useState(0);
 
   const { dispatch } = useContext(AuthContext);
 
@@ -28,6 +28,7 @@ function Login() {
       );
 
       if (userCredential.user.emailVerified) {
+        setLoginAttempts(0);
         // Pengguna telah memverifikasi email
         // Lanjutkan dengan login
         dispatch({ type: "LOGIN", payload: userCredential.user });
@@ -45,6 +46,11 @@ function Login() {
       alert("Invalid email or password.");
       console.error(error);
       setLogin(true);
+
+      setLoginAttempts(loginAttempts + 1);
+      if (loginAttempts >= 5) {
+        navigate("/reset");
+      }
     }
   };
 
@@ -58,7 +64,7 @@ function Login() {
 
   const checkIfUserExists = async (user) => {
     const userDocRef = doc(db, "users", user.uid);
-  
+
     try {
       const docSnapshot = await getDoc(userDocRef);
       return docSnapshot.exists();
@@ -67,7 +73,6 @@ function Login() {
       return false;
     }
   };
-  
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
@@ -85,18 +90,18 @@ function Login() {
             roles: "user",
             img: result.user.photoURL,
           };
-          
+
           const userDocRef = doc(db, "users", result.user.uid);
-          
+
           // Gunakan setDoc untuk menambahkan data ke dokumen
           try {
-            await setDoc(userDocRef, userData)
+            await setDoc(userDocRef, userData);
           } catch (error) {
-            console.log(error)
+            console.log(error);
           }
         }
-          
-          // console.log(userData)
+
+        // console.log(userData)
         navigate("/");
       })
       .catch((err) => {

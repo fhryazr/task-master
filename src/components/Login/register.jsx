@@ -78,7 +78,6 @@ const Register = () => {
       .catch((err) => {
         console.error(err);
         setEmailError(true);
-        // setRegister(true);
       });
   };
 
@@ -89,7 +88,6 @@ const Register = () => {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        // console.log(result);
         dispatch({ type: "LOGIN", payload: result.user });
         const slicingEmail = result.user.email.match(/^(.+)@/);
         const userData = {

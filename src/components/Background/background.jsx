@@ -9,6 +9,7 @@ const BackgroundColorChanger = () => {
   );
 
   const [showColorOptions, setShowColorOptions] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   // Daftar warna dan gambar latar belakang
   const colors = [
@@ -61,6 +62,11 @@ const BackgroundColorChanger = () => {
     setBackgroundColor(color.color);
     // Mengatur latar belakang berdasarkan pilihan warna atau gambar
     if (color.color.startsWith("url(")) {
+      // If the user is not premium, show a message and return
+      if (!isPremium) {
+        alert("This feature is only available for premium users.");
+        return;
+      }
       // Jika background yang dipilih adalah gambar
       document.body.style.backgroundImage = color.color;
     } else {
