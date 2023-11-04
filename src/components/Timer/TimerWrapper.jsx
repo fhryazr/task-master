@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import Timer from "./Timer";
 import TimerSettingsModal from "./TimerSettingsModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -65,8 +65,7 @@ const TimerWrapper = () => {
               currentMode === modeKey
                 ? "active text-white"
                 : "text-slate-300 hover:text-white"
-            }`}
-          >
+            }`}>
             {modes[modeKey]}
           </button>
         ))}
