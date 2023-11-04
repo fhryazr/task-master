@@ -6,11 +6,18 @@ import { createPopper } from "@popperjs/core";
 import { getAuth } from "firebase/auth";
 // import { useNavigate } from "react-router-dom";
 import ProfilePopup from "./profil";
+import BackgroundColorPicker from "../Background/background";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
   const referenceElement = useRef(null);
   const popoverElement = useRef(null);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
+
+  const handleColorPickerToggle = () => {
+    setShowColorPicker(!showColorPicker);
+  };
 
   // Access the user data from your AuthContext
   // const { currentUser } = useContext(AuthContext);
@@ -67,6 +74,14 @@ function Navbar() {
         <div className="flex items-center justify-between">
           <div className="text-white text-xl font-semibold">Task Master</div>
           <ul className="flex items-center space-x-4">
+            <li>
+              <button
+                className="text-white hover:text-blue-200"
+                onClick={handleColorPickerToggle}
+              >
+                Background
+              </button>
+            </li>
             <li>
               <a
                 href="#"
@@ -126,6 +141,16 @@ function Navbar() {
           </ul>
         </div>
       </div>
+      {showColorPicker && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <BackgroundColorPicker
+            showColorPicker={showColorPicker}
+            setShowColorPicker={setShowColorPicker}
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+          />
+        </div>
+      )}
     </nav>
   );
 }
