@@ -13,27 +13,39 @@ function Login() {
   const navigate = useNavigate();
   // const [user, setUser] = useState(null);
 
-  const {dispatch} = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    signInWithEmailAndPassword(auth, email, password)
-      .then((data) => {
-        // console.log(data, "authData");
-        dispatch({type:"LOGIN", payload: data.user})
-        if (data.user.uid == "2AFvQr96kTRjcsjpyThP09WVzkU2"){
-          navigate('/admin')
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential.user.emailVerified) {
+        // Pengguna telah memverifikasi email
+        // Lanjutkan dengan login
+        dispatch({ type: "LOGIN", payload: userCredential.user });
+        if (userCredential.user.uid === "2AFvQr96kTRjcsjpyThP09WVzkU2") {
+          navigate("/admin");
         } else {
-          navigate('/')
+          navigate("/");
         }
-      })
-      .catch((err) => {
-        alert(err.code);
-        console.log(err)
-        setLogin(true);
-      });
+      } else {
+        // Email belum diverifikasi, tampilkan pesan kesalahan
+        alert("Please verify your email before logging in.");
+      }
+    } catch (error) {
+      // Handle kesalahan login di sini
+      alert("Invalid email or password.");
+      console.error(error);
+      setLogin(true);
+    }
   };
 
   const handleReset = () => {
@@ -48,14 +60,14 @@ function Login() {
     signInWithPopup(auth, provider)
       .then((result) => {
         // console.log(result);
-        dispatch({type:"LOGIN", payload: result.user})
+        dispatch({ type: "LOGIN", payload: result.user });
         const slicingEmail = result.user.email.match(/^(.+)@/);
         const userData = {
           displayName: result.user.displayName,
           username: slicingEmail[1],
           email: result.user.email,
           roles: "user",
-          img: result.user.photoURL
+          img: result.user.photoURL,
         };
 
         const userDocRef = doc(db, "users", result.user.uid);
@@ -82,7 +94,12 @@ function Login() {
       <div className="login-container">
         <h1 className="judul font-bold text-xl">Login</h1>
         <form onSubmit={handleSubmit}>
-          <input className="email-input" name="email" type="email" placeholder="Email" />
+          <input
+            className="email-input"
+            name="email"
+            type="email"
+            placeholder="Email"
+          />
           <br />
           <input
             className="pass-input"
@@ -96,7 +113,8 @@ function Login() {
           </p>
           <br />
           <button className="submit-button">Login</button>
-          <p>Don&apos;t have an account?{" "}
+          <p>
+            Don&apos;t have an account?{" "}
             <a className="signup-link" onClick={handleRegister}>
               Sign Up
             </a>

@@ -149,3 +149,16 @@ input {
   cursor: pointer;
   color: #007bff;
 }
+
+.error {
+  border-color: red;
+}
+
+.error-notification {
+  color: red;
+}
+
+.email-input.error {
+  /* Gaya input email dengan kesalahan (border merah misalnya) */
+  border-color: 1px solid red;
+}

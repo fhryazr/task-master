@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { auth, db, provider } from "../../config/FirebaseConfig";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { useContext } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
@@ -10,23 +13,40 @@ import "./style.css";
 
 const Register = () => {
   const navigate = useNavigate();
-  const {dispatch} = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
+  const handleEmailChange = () => {
+    // Mengatur emailError menjadi false saat email diubah
+    setEmailError(false);
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    const confirmPassword = e.target.confirmPassword.value; // Tambahkan ini
+    const confirmPassword = e.target.confirmPassword.value;
 
-    // Periksa apakah password dan konfirmasi password cocok
+    // Periksa apakah password dan confirm password cocok
     if (password !== confirmPassword) {
-      alert("Password and Confirm Password do not match.");
+      setPasswordMatchError(true);
       return;
     }
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((data) => {
+        // Mengirim email verifikasi
+        sendEmailVerification(auth.currentUser)
+          .then(() => {
+            // Email verifikasi berhasil dikirim
+            alert("Email verifikasi dikirim");
+          })
+          .catch((error) => {
+            console.error("Error mengirim email verifikasi:", error);
+          });
+
         console.log(data, "authData");
 
         const slicingEmail = email.match(/^(.+)@/);
@@ -37,7 +57,7 @@ const Register = () => {
           email: data.user.email,
           password: password,
           roles: "user",
-          img: null
+          img: null,
         };
 
         const userDocRef = doc(db, "users", data.user.uid);
@@ -49,6 +69,7 @@ const Register = () => {
           })
           .catch((err) => {
             console.error(err);
+            setEmailError(true);
           });
 
         console.log(userData);
@@ -56,6 +77,7 @@ const Register = () => {
       })
       .catch((err) => {
         console.error(err);
+        setEmailError(true);
         // setRegister(true);
       });
   };
@@ -68,14 +90,14 @@ const Register = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         // console.log(result);
-        dispatch({type:"LOGIN", payload: result.user})
+        dispatch({ type: "LOGIN", payload: result.user });
         const slicingEmail = result.user.email.match(/^(.+)@/);
         const userData = {
           displayName: result.user.displayName,
           username: slicingEmail[1],
           email: result.user.email,
           roles: "user",
-          img: result.user.photoURL
+          img: result.user.photoURL,
         };
 
         const userDocRef = doc(db, "users", result.user.uid);
@@ -93,7 +115,7 @@ const Register = () => {
         navigate("/");
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -103,22 +125,21 @@ const Register = () => {
         <h1 className="judul font-bold text-xl">Sign Up</h1>
         <form onSubmit={handleSubmit}>
           <input
-            className="email-input"
+            className={`email-input ${emailError ? "error" : ""}`} // Terapkan class "error" jika emailError true
             name="email"
             type="email"
             placeholder="Email"
           />
           <br />
           <input
-            className="pass-input"
+            className={`pass-input ${passwordMatchError ? "error" : ""}`}
             name="password"
             type="password"
             placeholder="Password"
           />
           <br />
-          {/* Tambahkan input untuk konfirmasi password */}
           <input
-            className="conf-input"
+            className={`conf-input ${passwordMatchError ? "error" : ""}`}
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
@@ -126,6 +147,17 @@ const Register = () => {
           <br />
           <br />
           <button className="submit-button">Signup</button>
+          {isRegistered && (
+            <div className="success-notification">Registration Successful!</div>
+          )}
+          {passwordMatchError && (
+            <div className="error-notification">
+              Password and Confirm Password do not match.
+            </div>
+          )}
+          {emailError && (
+            <div className="error-notification">Email is already in use.</div>
+          )}
           <p>
             Already have an account?{" "}
             <a className="login-link" onClick={handleLogin}>

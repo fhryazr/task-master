@@ -7,16 +7,16 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import ForgotPassword from "./components/Login/reset";
 
 const App = () => {
-  const {currentUser} = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to="/login" />;
   };
 
-  console.log(currentUser)
-
+  console.log(currentUser);
 
   return (
     <>
@@ -34,6 +34,7 @@ const App = () => {
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/reset" element={<ForgotPassword />} />
       </Routes>
     </>
   );
