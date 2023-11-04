@@ -27,18 +27,19 @@ function Login() {
         password
       );
 
-      if (userCredential.user.emailVerified) {
-        // Pengguna telah memverifikasi email
-        // Lanjutkan dengan login
+      if (userCredential.user) {
         dispatch({ type: "LOGIN", payload: userCredential.user });
-        if (userCredential.user.uid === "2AFvQr96kTRjcsjpyThP09WVzkU2") {
+        
+        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+        const userData = userDoc.data();
+        if (userData && userData.roles === "admin") {
           navigate("/admin");
-        } else {
+        } else if (userCredential.user.emailVerified) {
           navigate("/");
+        } else {
+          // Email belum diverifikasi, tampilkan pesan kesalahan
+          alert("Please verify your email before logging in.");
         }
-      } else {
-        // Email belum diverifikasi, tampilkan pesan kesalahan
-        alert("Please verify your email before logging in.");
       }
     } catch (error) {
       // Handle kesalahan login di sini
@@ -46,7 +47,8 @@ function Login() {
       console.error(error);
       setLogin(true);
     }
-  };
+};
+
 
   const handleReset = () => {
     navigate("/reset");
@@ -58,7 +60,7 @@ function Login() {
 
   const checkIfUserExists = async (user) => {
     const userDocRef = doc(db, "users", user.uid);
-  
+
     try {
       const docSnapshot = await getDoc(userDocRef);
       return docSnapshot.exists();
@@ -67,15 +69,14 @@ function Login() {
       return false;
     }
   };
-  
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        // console.log(result);
         const isUserExist = await checkIfUserExists(result.user);
 
         dispatch({ type: "LOGIN", payload: result.user });
+
         if (!isUserExist) {
           const slicingEmail = result.user.email.match(/^(.+)@/);
           const userData = {
@@ -85,19 +86,24 @@ function Login() {
             roles: "user",
             img: result.user.photoURL,
           };
-          
+
           const userDocRef = doc(db, "users", result.user.uid);
-          
-          // Gunakan setDoc untuk menambahkan data ke dokumen
+
           try {
-            await setDoc(userDocRef, userData)
+            await setDoc(userDocRef, userData);
           } catch (error) {
-            console.log(error)
+            console.log(error);
           }
         }
-          
-          // console.log(userData)
-        navigate("/");
+
+        // Periksa peran pengguna di Firestore
+        const userDoc = await getDoc(doc(db, "users", result.user.uid));
+        const userData = userDoc.data();
+        if (userData && userData.roles === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.error(err);
