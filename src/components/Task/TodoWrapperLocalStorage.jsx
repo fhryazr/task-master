@@ -16,6 +16,7 @@ const saveTodosToLocalStorage = (todos) => {
   localStorage.setItem("todos", JSON.stringify(todos));
 };
 
+
 const TodoWrapperLocalStorage = () => {
   const [todos, setTodos] = useState(getTodosFromLocalStorage());
   const [completedTodos, setCompletedTodos] = useState(0);
