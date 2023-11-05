@@ -15,11 +15,9 @@ const SubscriptionModal = ({ isOpen, onClose }) => {
         className="bg-white p-5 rounded-lg shadow-md w-full max-w-md text-center relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-bold text-gray-800">Premium</h2>
-        <p className="text-sm text-gray-600 mt-2">Your Now Is Premium</p>
-        <div className="text-4xl font-bold my-5">
-          $29<span className="text-xl text-gray-600">/month</span>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-800"> Premium</h2>
+        <p className="text-sm text-gray-600 mt-2">Enjoy Our Feature</p>
+        <div className="text-4xl font-bold my-5">Premium</div>
         <ul className="text-left list-none p-0">
           <li className="mb-2 text-gray-800">Individual configuration</li>
           <li className="mb-2 text-gray-800">No setup, or hidden fees</li>

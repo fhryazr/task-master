@@ -124,6 +124,22 @@ const Subscription = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    const midtransUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransUrl;
+
+    const midtransClientKey = "VITE_MIDTRANS_CLIENT_KEY";
+    scriptTag.setAttribute("data-client-key", midtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
