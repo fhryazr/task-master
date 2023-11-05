@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
 import "./style.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -21,6 +23,17 @@ const Register = () => {
   const handleEmailChange = () => {
     // Mengatur emailError menjadi false saat email diubah
     setEmailError(false);
+  };
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -40,14 +53,15 @@ const Register = () => {
         // Mengirim email verifikasi
         sendEmailVerification(auth.currentUser)
           .then(() => {
-            // Email verifikasi berhasil dikirim
-            alert("Email verifikasi dikirim");
+            // Notify must be before navigate to ensure it is called
+            notifySuccess(
+              "Registration successful, please check your email to verify your account."
+            );
+            setIsRegistered(true); // Assuming you want to show the "Registration Successful!" message
           })
           .catch((error) => {
             console.error("Error mengirim email verifikasi:", error);
           });
-
-        console.log(data, "authData");
 
         const slicingEmail = email.match(/^(.+)@/);
 
@@ -58,22 +72,20 @@ const Register = () => {
           password: password,
           roles: "user",
           img: "defaulProfilePicture.jpg",
+          status: "free",
         };
 
         const userDocRef = doc(db, "users", data.user.uid);
 
         // Gunakan setDoc untuk menambahkan data ke dokumen
         setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
+          .then(() => {})
           .catch((err) => {
             console.error(err);
             setEmailError(true);
           });
 
-        console.log(userData);
-        navigate("/login");
+        setTimeout(() => navigate("/login"), 6000);
       })
       .catch((err) => {
         console.error(err);
@@ -102,14 +114,10 @@ const Register = () => {
 
         // Gunakan setDoc untuk menambahkan data ke dokumen
         setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
+          .then(() => {})
           .catch((err) => {
             console.error(err);
           });
-
-        // console.log(userData)
         navigate("/");
       })
       .catch((err) => {
@@ -173,6 +181,7 @@ const Register = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };

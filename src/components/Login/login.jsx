@@ -7,13 +7,37 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/FirebaseConfig";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
-  const [setLogin] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [login, setLogin] = useState(false);
   const navigate = useNavigate();
-  const [loginAttempts, setLoginAttempts] = useState(0);
 
   const { dispatch } = useContext(AuthContext);
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const notifyFailed = (message) => {
+    toast.warn(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +52,6 @@ function Login() {
       );
 
       if (userCredential.user.emailVerified) {
-        setLoginAttempts(0);
         // Pengguna telah memverifikasi email
         // Lanjutkan dengan login
         dispatch({ type: "LOGIN", payload: userCredential.user });
@@ -38,19 +61,12 @@ function Login() {
           navigate("/");
         }
       } else {
-        // Email belum diverifikasi, tampilkan pesan kesalahan
-        alert("Please verify your email before logging in.");
+        notifyFailed("Please verify your email before logging in.");
       }
     } catch (error) {
-      // Handle kesalahan login di sini
-      alert("Invalid email or password.");
+      notifyError("Invalid email or passord");
       console.error(error);
       setLogin(true);
-
-      setLoginAttempts(loginAttempts + 1);
-      if (loginAttempts >= 5) {
-        navigate("/reset");
-      }
     }
   };
 
@@ -77,7 +93,6 @@ function Login() {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        // console.log(result);
         const isUserExist = await checkIfUserExists(result.user);
 
         dispatch({ type: "LOGIN", payload: result.user });
@@ -89,6 +104,7 @@ function Login() {
             email: result.user.email,
             roles: "user",
             img: result.user.photoURL,
+            status: "free",
           };
 
           const userDocRef = doc(db, "users", result.user.uid);
@@ -101,7 +117,6 @@ function Login() {
           }
         }
 
-        // console.log(userData)
         navigate("/");
       })
       .catch((err) => {
@@ -146,6 +161,7 @@ function Login() {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

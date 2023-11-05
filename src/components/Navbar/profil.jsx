@@ -7,7 +7,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import Subscription from "./subscription";
 
 function ProfilePopup() {
   const [showProfile, setShowProfile] = useState(false);
@@ -15,7 +14,7 @@ function ProfilePopup() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState();
   const [editedProfileImage, setEditedProfileImage] = useState(
-    "defaultProfilePicture.jpg"
+    "No_Profile_Picture.jpg"
   );
   const [user, setUser] = useState(null);
   const { dispatch } = useContext(AuthContext);
@@ -23,8 +22,6 @@ function ProfilePopup() {
   const [showImagePopup, setShowImagePopup] = useState(false);
   const inputRef = useRef();
   const storage = getStorage();
-  // eslint-disable-next-line no-unused-vars
-  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     const fetchUserProfileData = async () => {
@@ -43,7 +40,6 @@ function ProfilePopup() {
             const userData = docSnapshot.data();
             setEditedProfileImage(userData.img);
             setEditedName(userData.displayName);
-            setIsPremium(userData.isPremium);
           }
         } catch (error) {
           console.error("Error fetching user document:", error);
@@ -237,7 +233,6 @@ function ProfilePopup() {
               )}
             </div>
           </div>
-          <Subscription />
         </div>
       )}
     </div>

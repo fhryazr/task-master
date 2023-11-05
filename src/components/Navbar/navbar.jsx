@@ -1,8 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import { createPopper } from "@popperjs/core";
 import { getAuth } from "firebase/auth";
 import ProfilePopup from "./profil";
+import StatsModal from "./StatsModal";
 import BackgroundColorChanger from "../Background/background";
+import Subscription from "./subscribe";
+import Premium from "./premium";
+import { AuthContext } from "../../context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../config/FirebaseConfig";
 
 function Navbar() {
   const [showPopover, setShowPopover] = useState(false);
@@ -10,6 +16,43 @@ function Navbar() {
   const popoverElement = useRef(null);
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false);
+
+  const { currentUser } = useContext(AuthContext);
+  const user = currentUser;
+
+  const getData = useCallback(async () => {
+    const userId = user.uid;
+    try {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.data().status === "premium") {
+        setIsPremium(true);
+      } else {
+        setIsPremium(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      getData();
+    } else {
+      return;
+    }
+  }, [user, getData]);
+
+  const [isPremium, setIsPremium] = useState(false);
+
+  const openStatsModal = () => {
+    setShowStatsModal(true);
+  };
+
+  const closeStatsModal = () => {
+    setShowStatsModal(false);
+  };
 
   useEffect(() => {
     if (showPopover) {
@@ -57,8 +100,12 @@ function Navbar() {
     <nav className={`py-2 w-full`}>
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <div className="text-white text-xl font-semibold">Task Master</div>
+          <div className="text-white text-xl font-semibold md:hidden">TM</div>
+          <div className="text-white text-xl font-semibold hidden md:block">
+            Task Master
+          </div>
           <ul className="flex items-center space-x-4">
+            <li>{isPremium ? <Premium /> : <Subscription />}</li>
             <li>
               <BackgroundColorChanger />
             </li>
@@ -67,13 +114,15 @@ function Navbar() {
                 href="#"
                 className="text-white hover:text-blue-200"
                 onClick={handlePopoverClick}
-                ref={referenceElement}>
+                ref={referenceElement}
+              >
                 About
               </a>
               {showPopover && (
                 <div
                   className="bg-white border border-gray-300 p-4 rounded-lg shadow-md"
-                  ref={popoverElement}>
+                  ref={popoverElement}
+                >
                   <ul>
                     {options.map((option) => (
                       <li key={option.contentId}>
@@ -83,7 +132,8 @@ function Navbar() {
                           onClick={() => {
                             scrollToContent(option.contentId);
                             setShowPopover(false);
-                          }}>
+                          }}
+                        >
                           {option.label}
                         </a>
                       </li>
@@ -93,17 +143,24 @@ function Navbar() {
               )}
             </li>
             <li>
-              <a href="" className="text-white hover:text-blue-200">
+              <a
+                href="#"
+                className="text-white hover:text-blue-200"
+                onClick={openStatsModal}
+              >
                 Stats
               </a>
+              <StatsModal show={showStatsModal} onClose={closeStatsModal} />
             </li>
+
             <li>
               {isLoggedIn ? (
                 <a
                   className=""
                   onClick={() => {
                     setShowProfile(true); // Menampilkan pop-up profil
-                  }}>
+                  }}
+                >
                   <ProfilePopup
                     showProfile={showProfile}
                     setShowProfile={setShowProfile}

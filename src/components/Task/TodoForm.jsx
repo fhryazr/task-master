@@ -17,7 +17,7 @@ export const TodoForm = ({ addTodo }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="TodoForm flex flex-col w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
+      className="TodoForm flex flex-col items-center w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
       <div className="w-full">
         {/* form input untuk menambahkan tugas */}
         <input
@@ -32,7 +32,7 @@ export const TodoForm = ({ addTodo }) => {
       {/* Button menambahkan tugas */}
       <button
         type="submit"
-        className="todo-btn px-4 py-1 h-11 bg-purple-900 text-white rounded-lg">
+        className="todo-btn w-full md:w-[8vw] lg:w-[5vw] xl:w-[4vw] py-1 h-11 bg-purple-900 text-white rounded-lg">
         {/* Tampilan tombol menyesuaikan dengan lebar layar */}
         <span className="inline text-md sm:hidden">Add Task</span> 
         <span className="hidden sm:inline text-3xl">+</span>

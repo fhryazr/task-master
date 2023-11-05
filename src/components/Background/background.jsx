@@ -1,16 +1,56 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import Cookies from "js-cookie";
+import { AuthContext } from "../../context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../config/FirebaseConfig";
+import { toast, ToastContainer } from "react-toastify";
 
 // Menginisialisasi state untuk warna latar belakang dan opsi tampilan warna
+
 const BackgroundColorChanger = () => {
   const [backgroundColor, setBackgroundColor] = useState(
     localStorage.getItem("selectedColor") ||
       "bg-gradient-to-tr from-purple-700 via-purple-500 to-cyan-400 to-90%"
   );
+  const { currentUser } = useContext(AuthContext);
+  const user = currentUser;
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const getData = useCallback(async () => {
+    const userId = user.uid;
+    try {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.data().status === "premium") {
+        setIsPremium(true);
+      } else {
+        setIsPremium(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      getData();
+    } else {
+      return;
+    }
+  }, [user, getData]);
 
   const [showColorOptions, setShowColorOptions] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
-
   // Daftar warna dan gambar latar belakang
   const colors = [
     {
@@ -39,20 +79,20 @@ const BackgroundColorChanger = () => {
       color: "url('/bg-ruang-kelas.png')",
     },
     {
-      label: "url('/2246711.jpg')",
-      color: "url('/2246711.jpg')",
+      label: "url('/work.jpg')",
+      color: "url('/work.jpg')",
     },
     {
-      label: "url('/pxfuel (1).jpg')",
-      color: "url('/pxfuel (1).jpg')",
+      label: "url('/laut.jpg')",
+      color: "url('/laut.jpg')",
     },
     {
-      label: "url('/malam.jpg')",
-      color: "url('/malam.jpg')",
+      label: "url('/tree.jpg')",
+      color: "url('/tree.jpg')",
     },
     {
-      label: "url('/pxfuel (1).jpg')",
-      color: "url('/pxfuel (1).jpg')",
+      label: "url('/lautan.jpg')",
+      color: "url('/lautan.jpg')",
     },
   ];
 
@@ -64,7 +104,7 @@ const BackgroundColorChanger = () => {
     if (color.color.startsWith("url(")) {
       // If the user is not premium, show a message and return
       if (!isPremium) {
-        alert("This feature is only available for premium users.");
+        notifyError("This feature is only available for premium users");
         return;
       }
       // Jika background yang dipilih adalah gambar
@@ -136,6 +176,7 @@ const BackgroundColorChanger = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
