@@ -48,7 +48,7 @@ const TodoWrapperLocalStorage = () => {
         });
 
         Cookies.set(userId, JSON.stringify(todos), { expires: 365 });
-        console.log(todos);
+        // console.log(todos);
         return todos;
       } catch (error) {
         console.error("Error getting todos from Firestore:", error);
@@ -87,7 +87,7 @@ const TodoWrapperLocalStorage = () => {
   };
 
   const fetchTodoData = useCallback(async () => {
-    if (user!=null) {
+    if (user != null) {
       const userTodos = await getTodos();
       setTodos(userTodos);
     } else {
@@ -126,7 +126,6 @@ const TodoWrapperLocalStorage = () => {
       fetchTodoData();
 
       try {
-        // Step 2: Send the data to Firestore
         const userDocRef = doc(db, "users", userId);
         const userDocSnapshot = await getDoc(userDocRef);
 
@@ -134,12 +133,14 @@ const TodoWrapperLocalStorage = () => {
           const todosRef = collection(userDocRef, "todos");
           const todosCollectionSnapshot = await getDocs(todosRef);
 
-          if (todosCollectionSnapshot.empty) {
-            await setDoc(todosRef.doc(), {}); // Create an empty document for "todos"
+          if (todosCollectionSnapshot.length === 0) {
+            // Koleksi todos belum ada, buat koleksi todos.
+            await addDoc(todosRef, {}); // Create an empty document for "todos"
           }
 
           await addDoc(todosRef, newTodo);
         } else {
+          // User document belum ada, buat dokumen pengguna dan tambahkan todo.
           const newUserDocRef = doc(db, "users", userId);
           await setDoc(newUserDocRef, {}); // Create an empty user document
           const todosRef = collection(newUserDocRef, "todos");
@@ -154,7 +155,6 @@ const TodoWrapperLocalStorage = () => {
       setTodos(newTodos);
       saveTodosToLocalStorage(newTodos);
     }
-    
   };
 
   const toggleComplete = async (id) => {
@@ -178,19 +178,19 @@ const TodoWrapperLocalStorage = () => {
         // Send the updated data to Firestore
         const userDocRef = doc(db, "users", userId);
         const todosRef = collection(userDocRef, "todos");
-      
+
         // Buat query dengan kondisi where "id" == todo.id
         const q = query(todosRef, where("id", "==", id));
-      
+
         const querySnapshot = await getDocs(q);
-      
+
         querySnapshot.forEach(async (doc) => {
           const todo = doc.data();
-      
+
           // Anda memiliki dokumen yang sesuai dengan todo.id di sini
           // console.log(doc.id); // ID dokumen
           // console.log(todo); // Data dokumen
-      
+
           // Perbarui dokumen sesuai dengan nilai yang diinginkan
           await setDoc(doc.ref, {
             id: todo.id,
@@ -217,27 +217,27 @@ const TodoWrapperLocalStorage = () => {
   const deleteTodo = async (id) => {
     // Filter todos untuk menghapus todo yang memiliki ID yang sesuai
     const newTodos = todos.filter((todo) => todo.id !== id);
-  
+
     if (user) {
       const userId = user.uid;
-  
+
       // Update Cookies: Hapus todo yang memiliki ID yang sesuai
       const todosFromCookies = Cookies.get(userId) || "[]";
       const parsedTodos = JSON.parse(todosFromCookies) || [];
       const updatedTodos = parsedTodos.filter((todo) => todo.id !== id);
-  
+
       Cookies.set(userId, JSON.stringify(updatedTodos), { expires: 365 });
-  
+
       try {
         // Send the updated data to Firestore
         const userDocRef = doc(db, "users", userId);
         const todosRef = collection(userDocRef, "todos");
-  
+
         // Buat query dengan kondisi where "id" == id
         const q = query(todosRef, where("id", "==", id));
-  
+
         const querySnapshot = await getDocs(q);
-  
+
         querySnapshot.forEach(async (doc) => {
           // Hapus dokumen yang memiliki ID yang sesuai
           await deleteDoc(doc.ref);
@@ -249,14 +249,14 @@ const TodoWrapperLocalStorage = () => {
       // Handle the case when the user is not logged in
       saveTodosToLocalStorage(newTodos);
     }
-  
+
     // Langsung memperbarui UI
     setTodos(newTodos);
-  
+
     const completedCount = newTodos.filter((todo) => todo.completed).length;
     setCompletedTodos(completedCount);
   };
-  
+
   const editTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -269,29 +269,29 @@ const TodoWrapperLocalStorage = () => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
     );
-  
+
     if (user) {
       const userId = user.uid;
-  
+
       // Update Cookies: Perbarui tugas yang memiliki ID yang sesuai
       const todosFromCookies = Cookies.get(userId) || "[]";
       const parsedTodos = JSON.parse(todosFromCookies) || [];
       const updatedTodos = parsedTodos.map((todo) =>
         todo.id === id ? { ...todo, task } : todo
       );
-  
+
       Cookies.set(userId, JSON.stringify(updatedTodos), { expires: 365 });
-  
+
       try {
         // Send the updated data to Firestore
         const userDocRef = doc(db, "users", userId);
         const todosRef = collection(userDocRef, "todos");
-  
+
         // Buat query dengan kondisi where "id" == id
         const q = query(todosRef, where("id", "==", id));
-  
+
         const querySnapshot = await getDocs(q);
-  
+
         querySnapshot.forEach(async (doc) => {
           // Perbarui dokumen sesuai dengan nilai yang diinginkan
           await updateDoc(doc.ref, {
@@ -305,7 +305,7 @@ const TodoWrapperLocalStorage = () => {
       // Handle the case when the user is not logged in
       saveTodosToLocalStorage(newTodos);
     }
-  
+
     // Langsung memperbarui UI
     setTodos(newTodos);
   };
@@ -317,31 +317,31 @@ const TodoWrapperLocalStorage = () => {
       alert("belum ada tugas yang selesai");
       return;
     }
-  
+
     const newTodos = todos.filter((todo) => !todo.completed);
-  
+
     if (user) {
       const userId = user.uid;
-  
+
       // Perbarui Cookies: Hapus tugas yang telah selesai
       const todosFromCookies = Cookies.get(userId) || "[]";
       const parsedTodos = JSON.parse(todosFromCookies) || [];
       const updatedTodos = parsedTodos.filter((todo) => !todo.completed);
-  
+
       // Simpan data yang telah diperbarui ke Cookies
       Cookies.set(userId, JSON.stringify(updatedTodos), { expires: 365 });
-  
+
       try {
         // Send the updated data to Firestore: Hapus tugas yang telah selesai
         const userDocRef = doc(db, "users", userId);
         const todosRef = collection(userDocRef, "todos");
-  
+
         // Buat query dengan kondisi where "completed" == true
         const q = query(todosRef, where("completed", "==", true));
-  
+
         // Dapatkan daftar tugas yang telah selesai
         const querySnapshot = await getDocs(q);
-  
+
         querySnapshot.forEach(async (doc) => {
           // Hapus dokumen sesuai dengan kondisi
           await deleteDoc(doc.ref);
@@ -354,7 +354,7 @@ const TodoWrapperLocalStorage = () => {
       // Perbarui tugas yang belum selesai
       saveTodosToLocalStorage(newTodos);
     }
-  
+
     // Langsung memperbarui UI dengan tugas yang belum selesai
     setTodos(newTodos);
     // Set jumlah tugas yang telah selesai menjadi 0
@@ -364,7 +364,7 @@ const TodoWrapperLocalStorage = () => {
   return (
     <div className="TodoWrapper container w-[95vw] sm:w-[70vw] lg:w-[50vw]">
       <h1 className="mb-2 font-semibold text-xl text-white">Task Today</h1>
-      <TodoForm addTodo={addTodo} />
+      <TodoForm addTodo={addTodo} todos={todos} setTodos={setTodos} />
       <div className="TodoList bg-slate-100 px-3 pb-2 rounded-md drop-shadow-lg">
         <div className="h-[30vh] px-2 py-2 overflow-y-auto hover:overflow-y-auto">
           {todos.length === 0 ? (

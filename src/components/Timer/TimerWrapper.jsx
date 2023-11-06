@@ -61,7 +61,7 @@ const TimerWrapper = () => {
           <button
             key={modeKey}
             onClick={() => handleModeChange(modeKey)}
-            className={`mode-button ${
+            className={`mode-button text-base md:text-lg ${
               currentMode === modeKey
                 ? "active text-white"
                 : "text-slate-300 hover:text-white"

@@ -16,9 +16,8 @@ const Bgm = ({ songs }) => {
     const newSongStates = [...songStates];
     newSongStates[index] = !newSongStates[index];
 
-    console.log(`Song ${index} is ${newSongStates[index] ? "playing" : "paused"}`);
-
-  
+    // console.log(`Song ${index} is ${newSongStates[index] ? "playing" : "paused"}`);
+    
     // Berhenti semua lagu terlebih dahulu
     oceanRefs.forEach((ref, i) => {
       if (i !== index) {

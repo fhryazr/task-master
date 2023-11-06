@@ -1,18 +1,69 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { TranscriptionContext } from "../../context/TranscriptionContext"
 
-export const TodoForm = ({ addTodo }) => {
+export const TodoForm = ({ addTodo, todos }) => {
   const [todoValue, setTodoValue] = useState("");
-
-  //handler submit form
+  const [taskValue, setTaskValue] = useState([todos]);
+  const {commandScript} = useContext(TranscriptionContext);
   const handleSubmit = (e) => {
-    // prevent default action
     e.preventDefault();
-    if (todoValue) {
-      addTodo(todoValue); // menambahkan task baru dengan fungsi addTodo dari prop
-      setTodoValue(""); //mengosongkan form setelah submit
+
+    const trimmedValue = todoValue.trim();
+
+    if (trimmedValue && !taskValue.includes(trimmedValue)) {
+      addTodo(trimmedValue);
+      setTodoValue("");
+      setTaskValue([...taskValue, trimmedValue]);
+    } else {
+      alert(`Task ${todoValue} is already exist`)// Menampilkan pesan kesalahan
+      setTodoValue('');
     }
   };
+
+  const keywordAdd = [
+    "buatkan tugas",
+    "buatkan tas",
+    "buatkan task",
+    "tambahkan tugas",
+    "tambahkan tas",
+    "tambahkan task",
+    "buat tugas",
+    "buat tas",
+    "buat task",
+    "tambah tugas",
+    "tambah tas",
+    "tambah task",
+  ];
+
+  useEffect(() => {
+    const lowerCommand = commandScript.toLowerCase();
+  
+    // Loop melalui array keywordAdd
+    for (const key of keywordAdd) {
+      if (lowerCommand.includes(key)) {
+        // Temukan indeks kata kunci dalam transkrip
+        const startIndex = lowerCommand.indexOf(key);
+        // Ambil bagian transkrip setelah kata kunci
+        let todoText = lowerCommand.substring(startIndex + key.length).trim();
+        todoText = todoText.replace(/\.$/, '');
+        // Periksa jika todoText memiliki isi (tidak hanya spasi)
+        if (todoText) {
+          // Panggil addTodo dengan todoText
+          if (todoText && !taskValue.includes(todoText)) {
+            addTodo(todoText);
+            setTodoValue("");
+            setTaskValue([...taskValue, todoText]);
+          } else {
+            setTodoValue('');
+          }
+        }
+        break; // Keluar dari loop setelah menemukan kata kunci pertama
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commandScript, addTodo]);
+  
 
   return (
     <form
@@ -34,7 +85,7 @@ export const TodoForm = ({ addTodo }) => {
         type="submit"
         className="todo-btn w-full md:w-[8vw] lg:w-[5vw] xl:w-[4vw] py-1 h-11 bg-purple-900 text-white rounded-lg">
         {/* Tampilan tombol menyesuaikan dengan lebar layar */}
-        <span className="inline text-md sm:hidden">Add Task</span> 
+        <span className="inline text-md sm:hidden">Add Task</span>
         <span className="hidden sm:inline text-3xl">+</span>
       </button>
     </form>

@@ -4,12 +4,16 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
 import { AuthContextProvider } from "./context/AuthContext.jsx";
+import { TranscriptionProvider } from "./context/TranscriptionContext.jsx";
+// import { TimerProvider } from "./context/TimerContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <App />
+        <TranscriptionProvider>
+          <App />
+        </TranscriptionProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>

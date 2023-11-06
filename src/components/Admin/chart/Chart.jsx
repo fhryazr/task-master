@@ -8,8 +8,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  YAxis,
-  Label,
 } from "recharts";
 
 // const data = [
@@ -46,14 +44,6 @@ const Chart = ({ aspect, title, data }) => {
             stroke="gray"
             tickFormatter={(value) => (value === formattedDate ? "Today" : "")}
           />
-          <YAxis stroke="gray">
-            <Label
-              value="Focus Time"
-              angle={-90} // Sudut teks judul (0 adalah horizontal, -90 adalah vertikal)
-              position="insideLeft" // Letak judul (insideLeft adalah di dalam Y-Axis)
-              dy={10} // Penyesuaian vertikal teks judul
-            />
-          </YAxis>
           <CartesianGrid strokeDasharray="3 3" className="chartGrid" />
           <Tooltip formatter={(value) => formatTime(value)} />
           <Area
