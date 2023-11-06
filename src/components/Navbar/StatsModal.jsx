@@ -23,7 +23,7 @@ const StatsModal = ({ show, onClose }) => {
   const { currentUser } = useContext(AuthContext);
   const user = currentUser;
 
-  const getFocusStats = useCallback(async() => {
+  const getFocusStats = useCallback(async () => {
     if (user !== null) {
       const userId = user.uid;
       try {
@@ -39,11 +39,12 @@ const StatsModal = ({ show, onClose }) => {
           });
           // Merge the focusStats array
           const mergedFocusStats = [].concat(...focusStats);
-          
-          mergedFocusStats.map((focusStats) => 
-          Cookies.set(`stats-${userId}`, JSON.stringify(focusStats.data),  {
-            expires: 365,
-            }));
+
+          mergedFocusStats.map((focusStats) =>
+            Cookies.set(`stats-${userId}`, JSON.stringify(focusStats.data), {
+              expires: 365,
+            })
+          );
         }
       } catch (error) {
         console.error("Error fetching focus stats: ", error);
@@ -93,7 +94,7 @@ const StatsModal = ({ show, onClose }) => {
       title: "Today",
       aspect: 2 / 1,
       data: [
-        { name: '', Total: 0 },
+        { name: "", Total: 0 },
         { name: formattedDate, Total: oneDayTotalFocusTime },
       ],
     },
@@ -118,7 +119,8 @@ const StatsModal = ({ show, onClose }) => {
     <dialog
       id="my_modal_2"
       className="modal bg-black bg-opacity-20 flex justify-center items-center"
-      ref={modalRef}>
+      ref={modalRef}
+    >
       <div className="bg-white rounded-lg z-10 p-1">
         <div className="ms-auto me-auto modal-box h-[50vh] w-[90vw] md:w-[60vw] md:h-[75vh] lg:w-[40vw] xl:w-[30vw] shadow-none">
           <div className="text-center">
@@ -145,26 +147,24 @@ const StatsModal = ({ show, onClose }) => {
                     ))}
                   </>
                 ) : (
-                  <>
-                    <div className="flex flex-col items-center justify-center h-[30vh] md:h-[50vh]">
-                      <p className="py-4 text-xl font-semibold">Begin Your Focus Session to Track Time</p>
-                    </div>
-                  </>
+                  <div className="flex flex-col items-center justify-center h-[30vh] md:h-[50vh]">
+                    <p className="py-4 text-xl font-semibold">
+                      Begin Your Focus Session to Track Time
+                    </p>
+                  </div>
                 )}
               </>
             ) : (
-              <>
-                <div className="flex flex-col items-center justify-center h-[40vh] md:h-[65vh]">
-                  <h1 className="text-xl mb-4">
-                    Log In to Track and Analyze Your Focus Time
-                  </h1>
-                  <Link to="/login">
-                    <span className="text-lg bg-purple-900 text-white px-5 py-2 rounded-md">
-                      Login
-                    </span>
-                  </Link>
-                </div>
-              </>
+              <div className="flex flex-col items-center justify-center h-[40vh] md:h-[65vh]">
+                <h1 className="text-xl mb-4">
+                  Log In to Track and Analyze Your Focus Time
+                </h1>
+                <Link to="/login">
+                  <span className="text-lg bg-purple-900 text-white px-5 py-2 rounded-md">
+                    Login
+                  </span>
+                </Link>
+              </div>
             )}
           </div>
         </div>
@@ -172,7 +172,8 @@ const StatsModal = ({ show, onClose }) => {
       <form
         method="dialog"
         className="modal-backdrop absolute h-screen w-screen z-0"
-        onClick={onClose}>
+        onClick={onClose}
+      >
         <button>close</button>
       </form>
     </dialog>

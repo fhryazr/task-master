@@ -167,7 +167,21 @@ const BackgroundColorChanger = () => {
                     cursor: "pointer",
                   }}
                   className={`w-10 h-10 rounded-full`}
-                ></div>
+                >
+                  {!isPremium && color.color.startsWith("url(") && (
+                    <span
+                      className="absolute"
+                      style={{
+                        fontSize: "0.75rem",
+                        top: "50%", // Centers vertically
+                        left: "50%", // Centers horizontally
+                        transform: "translate(-50%, -50%)", // Ensures true center regardless of element size
+                      }}
+                    >
+                      🔒
+                    </span>
+                  )}
+                </div>
                 <div className="absolute top-0 left-0 p-2 text-black font-bold cursor-pointer">
                   {color.name}
                 </div>

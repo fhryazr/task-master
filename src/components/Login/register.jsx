@@ -19,6 +19,7 @@ const Register = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [weakPass, setWeakPass] = useState(false);
 
   const handleEmailChange = () => {
     // Mengatur emailError menjadi false saat email diubah
@@ -43,6 +44,10 @@ const Register = () => {
     const confirmPassword = e.target.confirmPassword.value;
 
     // Periksa apakah password dan confirm password cocok
+    if (password.length < 8) {
+      setWeakPass(true);
+      return;
+    }
     if (password !== confirmPassword) {
       setPasswordMatchError(true);
       return;
@@ -138,7 +143,9 @@ const Register = () => {
           />
           <br />
           <input
-            className={`pass-input ${passwordMatchError ? "error" : ""}`}
+            className={`pass-input ${
+              passwordMatchError || weakPass ? "error" : ""
+            }`}
             name="password"
             type="password"
             placeholder="Password"
@@ -163,6 +170,11 @@ const Register = () => {
           )}
           {emailError && (
             <div className="error-notification">Email is already in use.</div>
+          )}
+          {weakPass && (
+            <div className="error-notification">
+              Password should more than 8 character.
+            </div>
           )}
           <p>
             Already have an account?{" "}
