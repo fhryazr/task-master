@@ -8,7 +8,7 @@ const BgmWrapper = () => {
   const [currentMode, setCurrentMode] = useState(initialMode);
   const modes = {
     bgm: "Ambient",
-    spotify: "SpotifyPro",
+    // spotify: "SpotifyPro",
   };
   const songs = [
     {
@@ -22,8 +22,28 @@ const BgmWrapper = () => {
       imageUrl: "/CalmOceanWaves.png",
     },
     {
-      title: "Lofi",
+      title: "Lofi Hillside",
       waveType: "hillside.wav",
+      imageUrl: "/CalmOceanWaves.png",
+    },
+    {
+      title: "Dream Land",
+      waveType: "dreamland.mp3",
+      imageUrl: "/CalmOceanWaves.png",
+    },
+    {
+      title: "Memories",
+      waveType: "Memories.mp3",
+      imageUrl: "/CalmOceanWaves.png",
+    },
+    {
+      title: "Rain",
+      waveType: "rain.mp3",
+      imageUrl: "/CalmOceanWaves.png",
+    },
+    {
+      title: "Happy Nature",
+      waveType: "Happy Nature.mp3",
       imageUrl: "/CalmOceanWaves.png",
     },
   ];
@@ -42,15 +62,15 @@ const BgmWrapper = () => {
             onClick={() => handleModeChange(modeKey)}
             className={`mode-button ${
               currentMode === modeKey
-                ? "active text-white"
+                ? "active text-white "
                 : "text-slate-300 hover:text-white"
             }`}>
             {modes[modeKey]}
           </button>
         ))}
       </div>
-      <div className="bg-white h-[12rem] p-2 rounded-lg">
-        <div className="bg-white max-h-[11rem] overflow-y-auto rounded-lg hover:overflow-y-auto hover:rounded-lg">
+      <div className="bg-white h-[10rem] md:h-[12rem] p-2 rounded-lg">
+        <div className="bg-white max-h-[9rem] md:max-h-[11rem] overflow-y-auto rounded-lg hover:overflow-y-auto hover:rounded-lg">
           {currentMode === "bgm" ? (
             <Bgm songs={songs} />
           ) : (

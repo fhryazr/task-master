@@ -8,6 +8,7 @@ import timerNotification from "../../assets/timer_notif.mp3";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
+import { TranscriptionContext } from "../../context/TranscriptionContext";
 import { db } from "../../config/FirebaseConfig";
 import {
   doc,
@@ -20,6 +21,7 @@ import {
 
 const Timer = ({ mode, settings, onTimerComplete }) => {
   const { currentUser } = useContext(AuthContext);
+  const { commandScript } = useContext(TranscriptionContext);
   const user = currentUser;
 
   // NOTIFIKASI
@@ -133,6 +135,62 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
     setSeconds(initialDuration);
   };
 
+  const keywordStart = [
+    "mulai waktu",
+    "start timer",
+    "mulai timer",
+    "jalankan waktu",
+    "jalankan timer",
+  ];
+  const keywordPause = [
+    "pause timer",
+    "paus timer",
+    "jeda waktu",
+    "jeda timer",
+    "tunda waktu",
+    "berhenti sejenak",
+    "berhenti sebentar",
+    "jeda sementara",
+    "tahan waktu",
+  ];
+  const keywordReset = [
+    "reset timer",
+    "reset waktu",
+    "riset timer",
+    "riset waktu",
+    "nolkan waktu",
+    "cukup"
+  ];
+  const keywordCombine = [
+    "setel ulang",
+    "mulai dari awal",
+    "ulang dari awal",
+    "ulangi",
+    "restart"
+  ]
+
+  useEffect(() => {
+    const lowerCommand = commandScript.toLowerCase();
+    if (keywordStart.some((key) => lowerCommand.includes(key))) {
+      setTimeout(() => {
+        startTimer();
+      }, 1000);
+    } else if (keywordPause.some((key) => lowerCommand.includes(key))) {
+      setTimeout(() => {
+        pauseTimer();
+      }, 1000);
+    } else if (keywordReset.some((key) => lowerCommand.includes(key))) {
+      setTimeout(() => {
+        resetTimer();
+      }, 1000);
+    } else if (keywordCombine.some((key) => lowerCommand.includes(key))) {
+      setTimeout(() => {
+        resetTimer();
+        startTimer();
+      }, 1000);
+    } 
+  }, [commandScript, startTimer]);
+
   const formatTime2 = (timeInMilliseconds) => {
     const seconds = Math.floor(timeInMilliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -147,32 +205,32 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
     const formattedTime = formatTime2(focusTime);
     const currentDate = new Date();
     const formattedDate = format(currentDate, "MM/dd/yyyy");
-  
+
     // Mengambil data dari Cookies
     const storedFocusTimeCookies = Cookies.get(`stats-${userId}`);
     let focusTimeStorageCookies = [];
-  
+
     if (storedFocusTimeCookies) {
       focusTimeStorageCookies = JSON.parse(storedFocusTimeCookies);
     }
-  
+
     // Menambahkan data waktu fokus baru ke array objek
     focusTimeStorageCookies.push({ day: formattedDate, waktu: formattedTime });
-  
+
     // Menyimpan data ke Cookies
     Cookies.set(`stats-${userId}`, JSON.stringify(focusTimeStorageCookies), {
       expires: 365,
     });
-  
+
     try {
       const userRef = doc(db, "users", userId);
       const userDocSnapshot = await getDoc(userRef);
-  
+
       if (userDocSnapshot.exists()) {
         const focusStatsRef = collection(userRef, "focusStats");
         // Check if "focusStats" already exists
         const focusStatsSnapshot = await getDocs(focusStatsRef);
-  
+
         if (focusStatsSnapshot.empty) {
           // If it doesn't exist, create a new document
           await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
@@ -185,7 +243,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
         // Create an empty user document
         const newUserDocRef = doc(db, "users", userId);
         await setDoc(newUserDocRef, {});
-  
+
         // Create "focusStats" collection and add the data
         const focusStatsRef = collection(newUserDocRef, "focusStats");
         await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
@@ -194,8 +252,6 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
       console.log(err);
     }
   };
-  
-  
 
   // const [totalFocusTime, setTotalFocusTime] = useState(0);
   const getTimeFocus = () => {
