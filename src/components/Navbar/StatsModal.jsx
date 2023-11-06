@@ -75,6 +75,8 @@ const StatsModal = ({ show, onClose }) => {
     date.getMonth() + 1
   }/${date.getFullYear()}`;
 
+  
+
   const totalFocusTime = calculateTotalFocusTime(dataFocus);
   const oneDayTotalFocusTime = getFocusTimeInInterval(dataFocus, 0);
 
@@ -86,6 +88,8 @@ const StatsModal = ({ show, onClose }) => {
 
   const focusStatsInYearInterval = getFocusTimeInYearInterval(dataFocus);
   focusStatsInYearInterval.sort((a, b) => new Date(a.name) - new Date(b.name));
+
+  // console.log(typeof dataFocus)
 
   //parameter untuk charts
   const intervalData = [

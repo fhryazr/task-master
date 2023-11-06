@@ -29,7 +29,7 @@ function Login() {
 
       if (userCredential.user) {
         dispatch({ type: "LOGIN", payload: userCredential.user });
-        
+
         const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
         const userData = userDoc.data();
         if (userData && userData.roles === "admin") {
@@ -47,8 +47,7 @@ function Login() {
       console.error(error);
       setLogin(true);
     }
-};
-
+  };
 
   const handleReset = () => {
     navigate("/reset");
@@ -85,6 +84,8 @@ function Login() {
             email: result.user.email,
             roles: "user",
             img: result.user.photoURL,
+            status: "free",
+            createdAt: new Date(),
           };
 
           const userDocRef = doc(db, "users", result.user.uid);

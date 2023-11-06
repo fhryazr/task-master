@@ -6,6 +6,7 @@ import New from "./new/New";
 import { Routes, Route } from "react-router-dom";
 import { userInputs } from "../data/formSource";
 import Pro from "./pro/Pro";
+import Edit from "./Edit";
 
 const AdminPage = () => {
 
@@ -19,6 +20,10 @@ const AdminPage = () => {
               <Route
                 path="new"
                 element={<New inputs={userInputs} title="Add New User" />}
+              />
+              <Route
+                path="/users/edit/:userId"
+                element={<Edit/>}
               />
             </Route>
             <Route path="/subscription">

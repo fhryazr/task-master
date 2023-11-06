@@ -14,19 +14,26 @@ export const userInputs = [
   {
     id: "email",
     label: "Email",
-    type: "mail",
+    type: "email",
     placeholder: "john_doe@gmail.com",
   },
   {
     id: "password",
     label: "Password",
     type: "password",
+    placeholder: "Password",
   },
   {
     id: "roles",
     label: "Roles",
     type: "text",
     placeholder: "User/Admin"
+  },
+  {
+    id: "status",
+    label: "Status",
+    type: "text",
+    placeholder: "Free/Premium"
   },
 ];
 
