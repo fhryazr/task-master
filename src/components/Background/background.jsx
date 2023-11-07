@@ -18,10 +18,10 @@ const BackgroundColorChanger = () => {
   const notifyError = (message) => {
     toast.error(message, {
       position: "top-center",
-      autoClose: 3000,
+      autoClose: 1000,
       hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
+      closeOnClick: false,
+      pauseOnHover: false,
       draggable: true,
     });
   };

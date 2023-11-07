@@ -165,9 +165,6 @@ const Subscription = () => {
             {user ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800">Premium</h2>
-                <p className="text-sm text-gray-600 mt-2">
-                  Best option for personal use.
-                </p>
                 <div className="text-4xl font-bold my-5">
                   Rp20.000<span className="text-xl text-gray-600">/month</span>
                 </div>
@@ -178,9 +175,11 @@ const Subscription = () => {
                     More voice command limit
                   </li>
                   <li className="mb-2 text-gray-800">
-                    Premium support: 6 months
+                    Next Month Subscribe will be Rp15.000
                   </li>
-                  <li className="mb-2 text-gray-800">Free updates: 6 months</li>
+                  <li className="mb-2 text-gray-800">
+                    We&apos;re sorry, but we don&apos;t provide refunds.
+                  </li>
                 </ul>
                 <button
                   className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 mt-5 focus:outline-none"
