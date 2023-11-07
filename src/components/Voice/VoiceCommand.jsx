@@ -4,20 +4,34 @@ import { useState, useEffect, useCallback, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { TranscriptionContext } from "../../context/TranscriptionContext";
+import { ToastContainer, toast } from "react-toastify";
 
 function VoiceCommand() {
   const [recognizing, setRecognizing] = useState(false);
   const [recognition, setRecognition] = useState(null);
-  const { updateTranscription } = useContext(TranscriptionContext);
+  const { updateTranscription, commandDetected, setCommandDetected } =
+    useContext(TranscriptionContext);
 
   const playSound = (soundFile) => {
     const audio = new Audio(soundFile);
     audio.play();
   };
 
+  const notify = (message) => {
+    playSound("unknown.mp3");
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: false,
+      sound: true,
+    });
+  };
+
   const toggleListening = useCallback(() => {
     if (recognizing === true) {
-      playSound("notif-2.mp3");
       recognition.stop();
       console.log("mic mati");
       setRecognizing(false);
@@ -37,9 +51,8 @@ function VoiceCommand() {
     newRecognition.lang = "id";
 
     newRecognition.onend = () => {
-      if (recognizing) {
-        newRecognition.start();
-      }
+      newRecognition.stop();
+      setRecognizing(false);
     };
 
     newRecognition.onstart = () => {
@@ -47,15 +60,17 @@ function VoiceCommand() {
     };
 
     newRecognition.onnomatch = () => {
+      newRecognition.stop();
       console.log("Tidak ada hasil yang cocok.");
-      alert("Uknown command")
-      playSound('unknown.mp3')
+      notify("Unknown Command");
+      // alert("Uknown command");
+      playSound("unknown.mp3");
     };
 
     newRecognition.onerror = (event) => {
       setRecognizing(false);
       newRecognition.abort();
-      playSound('notif-2.mp3')
+      playSound("unknown.mp3");
       console.error("Kesalahan pengenalan suara:", event.error);
     };
 
@@ -71,6 +86,7 @@ function VoiceCommand() {
     return window.SpeechRecognition || window.webkitSpeechRecognition;
   }
 
+
   useEffect(() => {
     if (recognition) {
       recognition.onresult = (event) => {
@@ -79,7 +95,8 @@ function VoiceCommand() {
           updateTranscription(
             (prevTranscription) => prevTranscription + transcript
           );
-
+          // console.log("voice command", commandDetected);
+          // const command = transcript.toLowerCase();
           // eksekusi command
           // executeCommand(transcript.toLowerCase());
           setTimeout(() => {
@@ -91,17 +108,19 @@ function VoiceCommand() {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recognition, toggleListening]);
+  }, [recognition, toggleListening, updateTranscription]);
 
   return (
     <div>
       <button onClick={toggleListening}>
         {recognizing ? (
-          <FontAwesomeIcon
-            className="h-8 bg-white text-purple-900 px-4 py-3 rounded-full"
-            icon={faMicrophone}
-            beatFade
-          />
+          <div>
+            <FontAwesomeIcon
+              className="h-8 bg-white text-purple-900 px-4 py-3 rounded-full"
+              icon={faMicrophone}
+              beatFade
+            />
+          </div>
         ) : (
           <FontAwesomeIcon
             className="h-8 text-purple-800 bg-white px-4 py-3 rounded-full"
@@ -109,6 +128,7 @@ function VoiceCommand() {
           />
         )}
       </button>
+      <ToastContainer />
     </div>
   );
 }
