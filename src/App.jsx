@@ -9,7 +9,6 @@ import { AuthContext } from "./context/AuthContext";
 import ForgotPassword from "./components/Login/reset";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "./config/FirebaseConfig";
-import NotFound from "./pages/NotFound";
 
 const App = () => {
   const [isUserAdmin, setIsUserAdmin] = useState(null); // Menggunakan null untuk menunjukkan bahwa data belum diambil
@@ -63,7 +62,6 @@ const App = () => {
         <Route path="register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset" element={<ForgotPassword />} />
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
