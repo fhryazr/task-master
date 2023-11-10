@@ -1,12 +1,10 @@
-import { useState } from "react";
-import { auth, provider } from "../../config/FirebaseConfig";
+import { useState, useContext } from "react";
+import { auth, provider, db } from "../../config/FirebaseConfig";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
-import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { setDoc, doc, getDoc } from "firebase/firestore";
-import { db } from "../../config/FirebaseConfig";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -53,7 +51,7 @@ function Login() {
 
       if (userCredential.user) {
         dispatch({ type: "LOGIN", payload: userCredential.user });
-        
+
         const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
         const userData = userDoc.data();
         if (userData && userData.roles === "admin") {
@@ -69,8 +67,7 @@ function Login() {
       console.error(error);
       setLogin(true);
     }
-};
-
+  };
 
   const handleReset = () => {
     navigate("/reset");
@@ -108,6 +105,7 @@ function Login() {
             roles: "user",
             img: result.user.photoURL,
             status: "free",
+            createdAt: new Date(),
           };
 
           const userDocRef = doc(db, "users", result.user.uid);

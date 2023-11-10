@@ -74,10 +74,10 @@ const Register = () => {
           displayName: slicingEmail[1],
           username: slicingEmail[1],
           email: data.user.email,
-          password: password,
           roles: "user",
           img: "defaulProfilePicture.jpg",
           status: "free",
+          createdAt: new Date(),
         };
 
         const userDocRef = doc(db, "users", data.user.uid);
@@ -113,6 +113,8 @@ const Register = () => {
           email: result.user.email,
           roles: "user",
           img: result.user.photoURL,
+          status: "free",
+          createdAt: new Date(),
         };
 
         const userDocRef = doc(db, "users", result.user.uid);

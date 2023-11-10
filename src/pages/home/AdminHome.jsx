@@ -7,7 +7,7 @@ import Table from "../../components/Admin/table/Table";
 
 const AdminHome = () => {
   return (
-    <div className="home w-screen">
+    <div className="home w-screen pl-2">
       <Sidebar />
       <div className="homeContainer">
         <div className="widgets">
@@ -16,8 +16,15 @@ const AdminHome = () => {
           <Widget type="earning" />
         </div>
         <div className="charts">
-          <Featured />
-          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <div>
+            <Featured />
+          </div>
+          <div className="w-full">
+            <Chart
+              title="Last 6 Months (Revenue)"
+              aspect={2 / 1}
+            />
+          </div>
         </div>
         <div className="listContainer">
           <div className="listTitle">Latest Transactions</div>

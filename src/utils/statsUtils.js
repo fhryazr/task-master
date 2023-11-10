@@ -94,6 +94,8 @@ const getFocusTimeInWeekInterval = (dataParams) => {
   });
 };
 
+
+
 const getFocusTimeInMonthInterval = (dataParams) => {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
@@ -146,6 +148,33 @@ const getFocusTimeInYearInterval = (dataParams) => {
   });
 };
 
+const getAllFocusTimeInInterval = (dataParams) => {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  // Hilangkan perubahan tahun
+  // const targetDate = new Date(now);
+  
+  // const focusStatsInInterval = dataParams.filter((focusData) => {
+  //   const focusDataDate = new Date(focusData.day);
+  //   return focusDataDate >= targetDate && focusDataDate <= now;
+  // });
+
+  const groupedStats = groupFocusStatsByDay(dataParams);
+
+  return groupedStats.map((group) => {
+    const totalFocusTime = calculateTotalFocusTime(group);
+    const date = new Date(group[0].day);
+    const formattedDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`; // Hanya tanggal, bulan, dan tahun
+    return {
+      name: formattedDate,
+      Total: totalFocusTime,
+    };
+  });
+};
+
 export {
   parseFocusTime,
   calculateTotalFocusTime,
@@ -155,4 +184,5 @@ export {
   getFocusTimeInWeekInterval,
   getFocusTimeInMonthInterval,
   getFocusTimeInYearInterval,
+  getAllFocusTimeInInterval,
 };

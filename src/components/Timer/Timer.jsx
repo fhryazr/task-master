@@ -137,6 +137,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
 
   const keywordStart = [
     "mulai waktu",
+    "mulai taimer",
     "start timer",
     "mulai timer",
     "jalankan waktu",
@@ -169,26 +170,36 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
     "restart"
   ]
 
+  const playSound = (soundFile) => {
+    const audio = new Audio(soundFile);
+    audio.play();
+  };
+
   useEffect(() => {
     const lowerCommand = commandScript.toLowerCase();
     if (keywordStart.some((key) => lowerCommand.includes(key))) {
+      playSound('notif-2.mp3')
       setTimeout(() => {
         startTimer();
       }, 1000);
+      
     } else if (keywordPause.some((key) => lowerCommand.includes(key))) {
+      playSound('notif-2.mp3')
       setTimeout(() => {
         pauseTimer();
       }, 1000);
     } else if (keywordReset.some((key) => lowerCommand.includes(key))) {
+      playSound('notif-2.mp3')
       setTimeout(() => {
         resetTimer();
       }, 1000);
     } else if (keywordCombine.some((key) => lowerCommand.includes(key))) {
+      playSound('notif-2.mp3')
       setTimeout(() => {
         resetTimer();
         startTimer();
       }, 1000);
-    } 
+    }
   }, [commandScript, startTimer]);
 
   const formatTime2 = (timeInMilliseconds) => {
