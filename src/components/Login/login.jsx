@@ -50,7 +50,9 @@ function Login() {
       );
 
       if (userCredential.user) {
-        dispatch({ type: "LOGIN", payload: userCredential.user });
+        const { uid, displayName, email } = userCredential.user;
+
+        dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
 
         const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
         const userData = userDoc.data();
@@ -94,7 +96,8 @@ function Login() {
       .then(async (result) => {
         const isUserExist = await checkIfUserExists(result.user);
 
-        dispatch({ type: "LOGIN", payload: result.user });
+        const { uid, displayName, email } = result.user;
+        dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
 
         if (!isUserExist) {
           const slicingEmail = result.user.email.match(/^(.+)@/);
@@ -104,8 +107,6 @@ function Login() {
             email: result.user.email,
             roles: "user",
             img: result.user.photoURL,
-            status: "free",
-            createdAt: new Date(),
           };
 
           const userDocRef = doc(db, "users", result.user.uid);
