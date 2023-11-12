@@ -187,7 +187,7 @@ const Register = () => {
           <p className="or">Or</p>
           <div className="google-login" onClick={handleGoogleLogin}>
             <img
-              src="/src/assets/g-logo.png"
+              src="g-logo.png"
               className="g-logo"
               alt="Google Logo"
             />

@@ -164,7 +164,7 @@ function Login() {
           </p>
           <p className="or">Or</p>
           <div className="google-login" onClick={handleGoogleLogin}>
-            <img src="/src/assets/g-logo.png" className="g-logo" />
+            <img src="g-logo.png" className="g-logo" />
             <span>Login with Google</span>
           </div>
         </form>

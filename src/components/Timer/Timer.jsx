@@ -4,7 +4,6 @@ import { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import timerNotification from "../../assets/timer_notif.mp3";
 import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
@@ -25,7 +24,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   const user = currentUser;
 
   // NOTIFIKASI
-  const notifySound = new Audio(timerNotification);
+  const notifySound = new Audio('timer_notif.mp3');
   const notify = (message) => {
     notifySound.play();
     toast.success(message, {
