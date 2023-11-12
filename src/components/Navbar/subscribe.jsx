@@ -150,7 +150,7 @@ const Subscription = () => {
 
   return (
     <>
-      <button onClick={handleOpenModal} style={{ color: "white" }}>
+      <button className="" onClick={handleOpenModal} style={{ color: "white" }}>
         Subscribe
       </button>
       {isModalOpen && (
@@ -165,20 +165,14 @@ const Subscription = () => {
             {user ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800">Premium</h2>
-                <div className="text-4xl font-bold my-5">
-                  Rp20.000<span className="text-xl text-gray-600">/month</span>
+                <div className="text-3xl md:text-4xl font-bold my-5">
+                  Rp20.000<span className="text-lg md:text-xl text-gray-600">/month</span>
                 </div>
                 <ul className="text-left list-none p-0">
-                  <li className="mb-2 text-gray-800">Select More Background</li>
-                  <li className="mb-2 text-gray-800">More task to add</li>
+                  <li className="mb-2 text-gray-800">Unlock New Background</li>
+                  <li className="mb-2 text-gray-800">Unlock New Ambient</li>
                   <li className="mb-2 text-gray-800">
-                    More voice command limit
-                  </li>
-                  <li className="mb-2 text-gray-800">
-                    Next Month Subscribe will be Rp15.000
-                  </li>
-                  <li className="mb-2 text-gray-800">
-                    We&apos;re sorry, but we don&apos;t provide refunds.
+                    Unlock Voice Command
                   </li>
                 </ul>
                 <button

@@ -7,13 +7,19 @@ import FaQ from "../components/FAQ/faq";
 import "../App.css";
 import BgmWrapper from "../components/bgm/BgmWrapper";
 import VoiceCommand from "../components/Voice/VoiceCommand";
+import TestNavbar from "../components/Navbar/testNavbar";
 
 function HomePage() {
   return (
     <>
       <div className="App container">
-        <div className="flex justify-center w-full px-2">
-          <Navbar />
+        <div className="flex justify-center w-full px-2 z-50">
+          <div className="hidden lg:inline-block lg:w-full">
+            <Navbar />
+          </div>
+          <div className="w-full lg:hidden">
+            <TestNavbar />
+          </div>
         </div>
         <div className="flex flex-col items-center">
           <div className="Top h-[125vh] flex flex-col justify-center items-center mb-2 pt-16 md:h-[120vh] lg:h-[100vh]">

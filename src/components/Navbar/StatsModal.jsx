@@ -125,7 +125,7 @@ const StatsModal = ({ show, onClose }) => {
       className="modal bg-black bg-opacity-20 flex justify-center items-center"
       ref={modalRef}
     >
-      <div className="bg-white rounded-lg z-10 p-1">
+      <div className="bg-white rounded-lg z-50 p-1">
         <div className="ms-auto me-auto modal-box h-[50vh] w-[90vw] md:w-[60vw] md:h-[75vh] lg:w-[40vw] xl:w-[30vw] shadow-none">
           <div className="text-center">
             {user ? (

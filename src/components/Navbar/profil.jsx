@@ -118,13 +118,13 @@ function ProfilePopup() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex justify-end">
       {isLoggedIn && (
         <button
           className="text-white hover:text-blue-200"
           onClick={() => setShowProfile(!showProfile)}
         >
-          <div className="relative">
+          <div className="relative right-0">
             <img
               src={editedProfileImage}
               alt="Profile"
@@ -134,7 +134,7 @@ function ProfilePopup() {
         </button>
       )}
       {showProfile && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50 px-2 text-black">
           <div className="profile-popup">
             {isLoggedIn && !isEditing && (
               <div
