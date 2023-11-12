@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import Timer from "./Timer";
 import TimerSettingsModal from "./TimerSettingsModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -53,7 +53,7 @@ const TimerWrapper = () => {
       setCurrentMode("focus");
     }
   };
-
+  // console.log(isModalOpen)
   return (
     <div className="TimerWrapper">
       <div className="mode-buttons flex justify-around items-center font-semibold text-white mb-2 text-lg">
@@ -61,12 +61,11 @@ const TimerWrapper = () => {
           <button
             key={modeKey}
             onClick={() => handleModeChange(modeKey)}
-            className={`mode-button ${
+            className={`mode-button text-base md:text-lg ${
               currentMode === modeKey
                 ? "active text-white"
                 : "text-slate-300 hover:text-white"
-            }`}
-          >
+            }`}>
             {modes[modeKey]}
           </button>
         ))}

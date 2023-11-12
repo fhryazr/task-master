@@ -1,19 +1,41 @@
-import { useState } from "react";
-import { auth, provider } from "../../config/FirebaseConfig";
+import { useState, useContext } from "react";
+import { auth, provider, db } from "../../config/FirebaseConfig";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import "./style.css";
-import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { setDoc, doc } from "firebase/firestore";
-import { db } from "../../config/FirebaseConfig";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
-  const [setLogin] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [login, setLogin] = useState(false);
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
 
   const { dispatch } = useContext(AuthContext);
+
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  const notifyFailed = (message) => {
+    toast.warn(message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,22 +49,23 @@ function Login() {
         password
       );
 
-      if (userCredential.user.emailVerified) {
-        // Pengguna telah memverifikasi email
-        // Lanjutkan dengan login
-        dispatch({ type: "LOGIN", payload: userCredential.user });
-        if (userCredential.user.uid === "2AFvQr96kTRjcsjpyThP09WVzkU2") {
+      if (userCredential.user) {
+        const { uid, displayName, email } = userCredential.user;
+
+        dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
+
+        const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+        const userData = userDoc.data();
+        if (userData && userData.roles === "admin") {
           navigate("/admin");
-        } else {
+        } else if (userCredential.user.emailVerified) {
           navigate("/");
         }
       } else {
-        // Email belum diverifikasi, tampilkan pesan kesalahan
-        alert("Please verify your email before logging in.");
+        notifyFailed("Please verify your email before logging in.");
       }
     } catch (error) {
-      // Handle kesalahan login di sini
-      alert("Invalid email or password.");
+      notifyError("Invalid email or passord");
       console.error(error);
       setLogin(true);
     }
@@ -56,36 +79,56 @@ function Login() {
     navigate("/register");
   };
 
+  const checkIfUserExists = async (user) => {
+    const userDocRef = doc(db, "users", user.uid);
+
+    try {
+      const docSnapshot = await getDoc(userDocRef);
+      return docSnapshot.exists();
+    } catch (error) {
+      console.error("Error checking user existence:", error);
+      return false;
+    }
+  };
+
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
-        // console.log(result);
-        dispatch({ type: "LOGIN", payload: result.user });
-        const slicingEmail = result.user.email.match(/^(.+)@/);
-        const userData = {
-          displayName: result.user.displayName,
-          username: slicingEmail[1],
-          email: result.user.email,
-          roles: "user",
-          img: result.user.photoURL,
-        };
+      .then(async (result) => {
+        const isUserExist = await checkIfUserExists(result.user);
 
-        const userDocRef = doc(db, "users", result.user.uid);
+        const { uid, displayName, email } = result.user;
+        dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
 
-        // Gunakan setDoc untuk menambahkan data ke dokumen
-        setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        if (!isUserExist) {
+          const slicingEmail = result.user.email.match(/^(.+)@/);
+          const userData = {
+            displayName: result.user.displayName,
+            username: slicingEmail[1],
+            email: result.user.email,
+            roles: "user",
+            img: result.user.photoURL,
+          };
 
-        // console.log(userData)
-        navigate("/");
+          const userDocRef = doc(db, "users", result.user.uid);
+
+          try {
+            await setDoc(userDocRef, userData);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+        // Periksa peran pengguna di Firestore
+        const userDoc = await getDoc(doc(db, "users", result.user.uid));
+        const userData = userDoc.data();
+        if (userData && userData.roles === "admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -126,6 +169,7 @@ function Login() {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }

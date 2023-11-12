@@ -10,16 +10,24 @@ const data = {
       content: `The Pomodoro Technique is created by Francesco Cirillo for a more productive way to work and study. The technique uses a timer to break down work into intervals, traditionally 25 minutes in length, separated by short breaks. Each interval is known as a pomodoro, from the Italian word for 'tomato', after the tomato-shaped kitchen timer that Cirillo used as a university student`,
     },
     {
-      title: "Nunc maximus, magna at ultricies elementum",
-      content:
-        "Nunc maximus, magna at ultricies elementum, risus turpis vulputate quam, vitae convallis ex tortor sed dolor.",
+      title: "Bagaimana cara menggunakan voice command?",
+      content: `Akses mic pada bagian kanan bawah website, kemudian katakan perintah seperti "mulai waktu",
+        `,
     },
     {
-      title: "Curabitur laoreet, mauris vel blandit fringilla",
-      content: `Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc, ac sagittis leo elit vel lorem.
-            Fusce tempor lacus ut libero posuere viverra. Nunc velit dolor, tincidunt at varius vel, laoreet vel quam.
-            Sed dolor urna, lobortis in arcu auctor, tincidunt mattis ante. Vivamus venenatis ultricies nibh in volutpat.
-            Cras eu metus quis leo vestibulum feugiat nec sagittis lacus.Mauris vulputate arcu sed massa euismod dignissim. `,
+      title: "Voice Command apa saja yang tersedia?",
+      content: `Voice Command yang tersedia pada website TaskMaster ini yaitu :
+      <ul>
+        <li>"mulai waktu"</li>
+        <li>"pause timer"</li>
+        <li>"jeda timer"</li>
+        <li>"reset timer"</li>
+        <li>"restart"</li>
+        <li>"buatkan tugas ..."</li>
+        <li>"buatkan task ..."</li>
+        <li>"tambahkan tugas ..."</li>
+        <li>"tambahkan task ..."</li>
+      </ul>`,
     },
   ],
 };

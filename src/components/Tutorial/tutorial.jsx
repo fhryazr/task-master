@@ -33,14 +33,18 @@ const AboutUs = () => {
         How to use TaskMaster?
       </h2>
       <ol className="list-decimal pl-5 mt-5 text-black">
-        <li style={{ marginTop: "10px" }}>Menambahkan tugas.</li>
-        <li style={{ marginTop: "10px" }}>Start Timer</li>
-        <li style={{ marginTop: "10px" }}>Masuk ke dashboard utama.</li>
+        <li style={{ marginTop: "10px" }}>Tambahkan Beberapa Tugas.</li>
         <li style={{ marginTop: "10px" }}>
-          Mulai dengan menambahkan tugas baru.
+          Atur Waktu untuk Focus, dan Break. Atau gunakan waktu default
         </li>
         <li style={{ marginTop: "10px" }}>
-          Putar Background Musik Yang Kamu Inginkan.
+          Mulai Waktu Dan Mulai Focus Mengerjakan Tugas
+        </li>
+        <li style={{ marginTop: "10px" }}>
+          Jika Tugas Sudah Selesai Cecklist Tugas
+        </li>
+        <li style={{ marginTop: "10px" }}>
+          Ulangi Mode Focus Hingga Tugas Selesai
         </li>
       </ol>
     </div>

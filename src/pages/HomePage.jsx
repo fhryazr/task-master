@@ -5,29 +5,45 @@ import AboutUs from "../components/About_Me/about";
 import Tutorial from "../components/Tutorial/tutorial";
 import FaQ from "../components/FAQ/faq";
 import "../App.css";
+import BgmWrapper from "../components/bgm/BgmWrapper";
+import VoiceCommand from "../components/Voice/VoiceCommand";
+import TestNavbar from "../components/Navbar/testNavbar";
 
 function HomePage() {
   return (
     <>
-      <div className={`App`}>
-        <div className="top-0 sticky z-50">
-          <Navbar />
+      <div className="App container">
+        <div className="flex justify-center w-full px-2 z-50">
+          <div className="hidden lg:inline-block lg:w-full">
+            <Navbar />
+          </div>
+          <div className="w-full lg:hidden">
+            <TestNavbar />
+          </div>
         </div>
-        <div className="Top h-screen flex flex-col justify-center items-center mb-4">
-          <div className="flex justify-center w-full mb-3 mt-[-100px]">
-            <TimerWrapper />
+        <div className="flex flex-col items-center">
+          <div className="Top h-[125vh] flex flex-col justify-center items-center mb-2 pt-16 md:h-[120vh] lg:h-[100vh]">
+            <div className="flex flex-col justify-center items-center w-full gap-5 md:gap-10 mb-8 mt-[-100px] lg:flex-row">
+              <TimerWrapper />
+              <BgmWrapper />
+            </div>
+            <TodoWrapperLocalStorage />
           </div>
-          <TodoWrapperLocalStorage />
-        </div>
-        <div className="Bottom bg-white w-screen flex flex-col items-center">
-          <div id="about-us">
-            <AboutUs />
+          <div className="flex justify-end sticky bottom-0 w-screen p-5 px-8">
+            <div>
+              <VoiceCommand />
+            </div>
           </div>
-          <div id="tutorial">
-            <Tutorial />
-          </div>
-          <div id="FAQ">
-            <FaQ />
+          <div className="Bottom bg-white w-[100vw] flex flex-col items-center gap-5 ">
+            <div className="" id="about-us">
+              <AboutUs />
+            </div>
+            <div id="tutorial">
+              <Tutorial />
+            </div>
+            <div id="FAQ">
+              <FaQ />
+            </div>
           </div>
         </div>
       </div>

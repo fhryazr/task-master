@@ -1,17 +1,49 @@
 /* eslint-disable react/prop-types */
 import "./widget.scss";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+// import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { useState, useEffect } from "react";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+// Impor komponen Widget
+
+// Fungsi untuk mengambil jumlah pengguna
+const fetchUserCount = async () => {
+  const db = getFirestore();
+  const usersCollection = collection(db, "users");
+  const userSnapshot = await getDocs(usersCollection);
+  return userSnapshot.size; // Jumlah pengguna
+};
+
+// Fungsi untuk mengambil jumlah berlangganan dengan status "success"
+const fetchSubscriptionCount = async () => {
+  const db = getFirestore();
+  const paymentsCollection = collection(db, "payments");
+  const subscriptionQuery = query(
+    paymentsCollection,
+    where("status", "==", "Success")
+  );
+  const subscriptionSnapshot = await getDocs(subscriptionQuery);
+  return subscriptionSnapshot.size; // Jumlah berlangganan
+};
 
 const Widget = ({ type }) => {
+  const [userCount, setUserCount] = useState(0);
+  const [subscriptionCount, setSubscriptionCount] = useState(0);
+
+  useEffect(() => {
+    // Panggil fungsi untuk mengambil jumlah pengguna dan berlangganan
+    fetchUserCount().then((count) => setUserCount(count));
+    fetchSubscriptionCount().then((count) => setSubscriptionCount(count));
+  }, []);
+
   let data;
 
   //temporary
-  const amount = 100;
-  const diff = 20;
+  // const amount = 100;
+  // const diff = 20;
 
   switch (type) {
     case "user":
@@ -28,11 +60,12 @@ const Widget = ({ type }) => {
             }}
           />
         ),
+        amount: userCount,
       };
       break;
-    case "order":
+    case "subcription":
       data = {
-        title: "ORDERS",
+        title: "SUBSCRIPTION",
         isMoney: false,
         link: "View all orders",
         icon: (
@@ -44,6 +77,7 @@ const Widget = ({ type }) => {
             }}
           />
         ),
+        amount: subscriptionCount,
       };
       break;
     case "earning":
@@ -84,15 +118,15 @@ const Widget = ({ type }) => {
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {amount}
+          {data.isMoney && "$"} {data.amount}
         </span>
         <span className="link">{data.link}</span>
       </div>
       <div className="right">
-        <div className="percentage positive">
+        {/* <div className="percentage positive">
           <KeyboardArrowUpIcon />
           {diff} %
-        </div>
+        </div> */}
         {data.icon}
       </div>
     </div>

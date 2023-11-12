@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
 import "./style.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -17,10 +19,22 @@ const Register = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [weakPass, setWeakPass] = useState(false);
 
   const handleEmailChange = () => {
     // Mengatur emailError menjadi false saat email diubah
     setEmailError(false);
+  };
+
+  const notifySuccess = (message) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -30,6 +44,10 @@ const Register = () => {
     const confirmPassword = e.target.confirmPassword.value;
 
     // Periksa apakah password dan confirm password cocok
+    if (password.length < 8) {
+      setWeakPass(true);
+      return;
+    }
     if (password !== confirmPassword) {
       setPasswordMatchError(true);
       return;
@@ -40,14 +58,15 @@ const Register = () => {
         // Mengirim email verifikasi
         sendEmailVerification(auth.currentUser)
           .then(() => {
-            // Email verifikasi berhasil dikirim
-            alert("Email verifikasi dikirim");
+            // Notify must be before navigate to ensure it is called
+            notifySuccess(
+              "Registration successful, please check your email to verify your account."
+            );
+            setIsRegistered(true); // Assuming you want to show the "Registration Successful!" message
           })
           .catch((error) => {
             console.error("Error mengirim email verifikasi:", error);
           });
-
-        console.log(data, "authData");
 
         const slicingEmail = email.match(/^(.+)@/);
 
@@ -55,30 +74,27 @@ const Register = () => {
           displayName: slicingEmail[1],
           username: slicingEmail[1],
           email: data.user.email,
-          password: password,
           roles: "user",
-          img: null,
+          img: "defaulProfilePicture.jpg",
+          status: "free",
+          createdAt: new Date(),
         };
 
         const userDocRef = doc(db, "users", data.user.uid);
 
         // Gunakan setDoc untuk menambahkan data ke dokumen
         setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
+          .then(() => {})
           .catch((err) => {
             console.error(err);
             setEmailError(true);
           });
 
-        console.log(userData);
-        // navigate("/login");
+        setTimeout(() => navigate("/login"), 6000);
       })
       .catch((err) => {
         console.error(err);
         setEmailError(true);
-        // setRegister(true);
       });
   };
 
@@ -89,7 +105,6 @@ const Register = () => {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        // console.log(result);
         dispatch({ type: "LOGIN", payload: result.user });
         const slicingEmail = result.user.email.match(/^(.+)@/);
         const userData = {
@@ -98,20 +113,18 @@ const Register = () => {
           email: result.user.email,
           roles: "user",
           img: result.user.photoURL,
+          status: "free",
+          createdAt: new Date(),
         };
 
         const userDocRef = doc(db, "users", result.user.uid);
 
         // Gunakan setDoc untuk menambahkan data ke dokumen
         setDoc(userDocRef, userData)
-          .then(() => {
-            console.log("berhasil masuk");
-          })
+          .then(() => {})
           .catch((err) => {
             console.error(err);
           });
-
-        // console.log(userData)
         navigate("/");
       })
       .catch((err) => {
@@ -132,7 +145,9 @@ const Register = () => {
           />
           <br />
           <input
-            className={`pass-input ${passwordMatchError ? "error" : ""}`}
+            className={`pass-input ${
+              passwordMatchError || weakPass ? "error" : ""
+            }`}
             name="password"
             type="password"
             placeholder="Password"
@@ -158,6 +173,11 @@ const Register = () => {
           {emailError && (
             <div className="error-notification">Email is already in use.</div>
           )}
+          {weakPass && (
+            <div className="error-notification">
+              Password should more than 8 character.
+            </div>
+          )}
           <p>
             Already have an account?{" "}
             <a className="login-link" onClick={handleLogin}>
@@ -175,6 +195,7 @@ const Register = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
