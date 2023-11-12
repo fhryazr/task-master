@@ -1,14 +1,15 @@
-import { useState, useEffect, useContext, useRef } from "react";
+/* eslint-disable react/prop-types */
+import { useState, useEffect, useRef } from "react";
 import "./profil.css";
 import { db } from "../../../src/config/FirebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { AuthContext } from "../../context/AuthContext";
+// import { AuthContext } from "../../context/AuthContext";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-function ProfilePopup() {
+function ProfilePopup({logOut}) {
   const [showProfile, setShowProfile] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -17,7 +18,7 @@ function ProfilePopup() {
     "No_Profile_Picture.jpg"
   );
   const [user, setUser] = useState(null);
-  const { dispatch } = useContext(AuthContext);
+  // const { dispatch } = useContext(AuthContext);
   const [file, setFile] = useState();
   const [showImagePopup, setShowImagePopup] = useState(false);
   const inputRef = useRef();
@@ -54,9 +55,7 @@ function ProfilePopup() {
   }, []);
 
   const handleLogout = async () => {
-    const auth = getAuth();
-    await auth.signOut();
-    dispatch({ type: "LOGOUT" });
+    logOut();
     setShowProfile(false);
     setIsLoggedIn(false);
   };

@@ -30,11 +30,13 @@ const Subscription = () => {
 
       const response = await axios.post(
         "https://taskmaster-online-server.vercel.app/api/payment/proses-transaksi",
+        // "http://localhost:1000/api/payment/proses-transaksi",
         data,
         config
       );
 
       const { token, order_id } = response.data; // Destructuring untuk mendapatkan token dan order_id
+      localStorage.setItem("x", response.data.order_id);
       setToken(token);
 
       if (!user || !user.uid) {
@@ -67,11 +69,11 @@ const Subscription = () => {
     }
   };
 
-  const updatePaymentStatus = async (orderId) => {
+  const updatePaymentStatus = async (orderId, statusParam) => {
     const paymentRef = doc(db, "payments", orderId);
     try {
       await updateDoc(paymentRef, {
-        status: "Success",
+        status: `${statusParam}`,
       });
     } catch (error) {
       console.error("Error updating user status:", error);
@@ -95,29 +97,40 @@ const Subscription = () => {
   };
 
   useEffect(() => {
+    let orderId; // Declare orderId in the higher scope
+
     if (token) {
       window.snap.pay(token, {
         onSuccess: async (result) => {
           localStorage.setItem("Pembayaran", JSON.stringify(result));
           setToken("");
 
-          const orderId = result.order_id;
+          orderId = result.order_id; // Assign orderId here
+
           if (user && user.uid && orderId) {
-            await updateUserStatus(user.uid); // Update user to 'premium' upon successful payment
-            await updatePaymentStatus(orderId);
+            await updateUserStatus(user.uid);
+            await updatePaymentStatus(orderId, "Success");
             await updateExpiredDate(orderId);
           }
         },
         onPending: (result) => {
+          orderId = result.order_id; // Assign orderId here
           localStorage.setItem("Pembayaran", JSON.stringify(result));
           setToken("");
         },
-        onError: (error) => {
+        onError: async (error) => {
           console.log(error);
+          // Make sure orderId is defined before using it
+          await updatePaymentStatus(localStorage.getItem("x"), "Failed");
+          localStorage.removeItem("x");
+
           setToken("");
         },
-        onClose: () => {
-          console.log("Anda belum menyelesaikan pembayaran");
+        onClose: async () => {
+          console.log("Anda batal pembayaran");
+          await updatePaymentStatus(localStorage.getItem("x"), "canceled");
+          localStorage.removeItem("x");
+
           setToken("");
         },
       });
@@ -130,7 +143,7 @@ const Subscription = () => {
     let scriptTag = document.createElement("script");
     scriptTag.src = midtransUrl;
 
-    const midtransClientKey = "VITE_MIDTRANS_CLIENT_KEY";
+    const midtransClientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
     scriptTag.setAttribute("data-client-key", midtransClientKey);
 
     document.body.appendChild(scriptTag);
@@ -139,7 +152,7 @@ const Subscription = () => {
       document.body.removeChild(scriptTag);
     };
   }, []);
-  
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -156,29 +169,27 @@ const Subscription = () => {
       {isModalOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
-          onClick={handleCloseModal}
-        >
+          onClick={handleCloseModal}>
           <div
             className="bg-white p-5 rounded-lg shadow-md w-full max-w-md text-center relative"
-            onClick={(e) => e.stopPropagation()}
-          >
+            onClick={(e) => e.stopPropagation()}>
             {user ? (
               <>
                 <h2 className="text-2xl font-bold text-gray-800">Premium</h2>
                 <div className="text-3xl md:text-4xl font-bold my-5">
-                  Rp10.000<span className="text-lg md:text-xl text-gray-600">/month</span>
+                  Rp10.000
+                  <span className="text-lg md:text-xl text-gray-600">
+                    /month
+                  </span>
                 </div>
                 <ul className="text-left list-none p-0">
                   <li className="mb-2 text-gray-800">Unlock New Background</li>
                   <li className="mb-2 text-gray-800">Unlock New Ambient</li>
-                  <li className="mb-2 text-gray-800">
-                    Unlock Voice Command
-                  </li>
+                  <li className="mb-2 text-gray-800">Unlock Voice Command</li>
                 </ul>
                 <button
                   className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 mt-5 focus:outline-none"
-                  onClick={handleBuyClick}
-                >
+                  onClick={handleBuyClick}>
                   Buy
                 </button>
               </>
@@ -194,8 +205,7 @@ const Subscription = () => {
             )}
             <button
               onClick={handleCloseModal}
-              className="absolute top-2 right-2 bg-none border-none text-2xl cursor-pointer text-black"
-            >
+              className="absolute top-2 right-2 bg-none border-none text-2xl cursor-pointer text-black">
               <FontAwesomeIcon icon={faTimes} />
             </button>
           </div>

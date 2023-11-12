@@ -18,7 +18,7 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, dispatch } = useContext(AuthContext);
   const user = currentUser;
 
   const getData = useCallback(async () => {
@@ -53,6 +53,14 @@ function Navbar() {
   const closeStatsModal = () => {
     setShowStatsModal(false);
   };
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    auth.signOut();
+    dispatch({ type: "LOGOUT" });
+    localStorage.removeItem("Pembayaran")
+    setIsPremium(false);
+  }
 
   useEffect(() => {
     if (showPopover) {
@@ -164,6 +172,7 @@ function Navbar() {
                   <ProfilePopup
                     showProfile={showProfile}
                     setShowProfile={setShowProfile}
+                    logOut={handleLogout}
                   />
                 </a>
               ) : (
