@@ -19,7 +19,7 @@ const Subscription = () => {
 
       const data = {
         item: "Premium Plan",
-        price: 20000,
+        price: 10000,
       };
 
       const config = {
@@ -122,7 +122,7 @@ const Subscription = () => {
         },
       });
     }
-  }, [token]);
+  }, [token, user]);
 
   useEffect(() => {
     const midtransUrl = "https://app.sandbox.midtrans.com/snap/snap.js";
@@ -139,7 +139,7 @@ const Subscription = () => {
       document.body.removeChild(scriptTag);
     };
   }, []);
-
+  
   const handleOpenModal = () => {
     setModalOpen(true);
   };
@@ -166,7 +166,7 @@ const Subscription = () => {
               <>
                 <h2 className="text-2xl font-bold text-gray-800">Premium</h2>
                 <div className="text-3xl md:text-4xl font-bold my-5">
-                  Rp20.000<span className="text-lg md:text-xl text-gray-600">/month</span>
+                  Rp10.000<span className="text-lg md:text-xl text-gray-600">/month</span>
                 </div>
                 <ul className="text-left list-none p-0">
                   <li className="mb-2 text-gray-800">Unlock New Background</li>
