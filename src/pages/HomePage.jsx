@@ -7,7 +7,7 @@ import FaQ from "../components/FAQ/faq";
 import "../App.css";
 import BgmWrapper from "../components/bgm/BgmWrapper";
 import VoiceCommand from "../components/Voice/VoiceCommand";
-import TestNavbar from "../components/Navbar/testNavbar";
+import TestNavbar from "../components/Navbar/TestNavbar";
 
 function HomePage() {
   return (
