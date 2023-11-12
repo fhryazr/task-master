@@ -29,7 +29,7 @@ const Subscription = () => {
       };
 
       const response = await axios.post(
-        "http://localhost:1000/api/payment/proses-transaksi",
+        "https://taskmaster-online-server.vercel.app/api/payment/proses-transaksi",
         data,
         config
       );
