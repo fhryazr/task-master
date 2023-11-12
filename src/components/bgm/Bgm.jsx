@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { PlayIcon, PauseIcon } from "@heroicons/react/24/solid";
 import { toast, ToastContainer } from "react-toastify";
+// import { AuthContext } from "../../context/AuthContext";
 
 const Bgm = ({ songs, isPremium }) => {
   const MAX = 50;
@@ -11,6 +12,8 @@ const Bgm = ({ songs, isPremium }) => {
   const [songVolumes, setSongVolumes] = useState(songs.map(() => MAX));
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const oceanRefs = songs.map(() => useRef(null));
+  // const { currentUser } = useContext(AuthContext)
+  // const user = currentUser;
 
   const notifyError = (message) => {
     toast.error(message, {
@@ -22,6 +25,18 @@ const Bgm = ({ songs, isPremium }) => {
       draggable: true,
     });
   };
+
+  useEffect(() => {
+    return () => {
+      // Pause and reset the audio when the user logs out
+      oceanRefs.forEach((ref, i) => {
+        if (songStates[i]) {
+          ref.current.pause();
+          ref.current.currentTime = 0;
+        }
+      });
+    };
+  }, [oceanRefs, songStates]);
 
   const toggleAudio = (index) => {
     if (songs[index].premium && !isPremium) {

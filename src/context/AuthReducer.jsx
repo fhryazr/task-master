@@ -6,6 +6,7 @@ const AuthReducer = (state, action) => {
       };
     }
     case "LOGOUT": {
+      window.location.reload();
       return {
         currentUser: null,
       }

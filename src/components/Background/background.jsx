@@ -41,16 +41,38 @@ const BackgroundColorChanger = () => {
     }
   }, [user]);
 
+  const [showColorOptions, setShowColorOptions] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+
+  const updateIsPremium = useCallback(async () => {
+    if (user) {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setIsPremium(userSnap.data().status === "premium");
+        }
+      } catch (error) {
+        console.error("Error updating isPremium:", error);
+      }
+    } else {
+      setIsPremium(false); // Set to false when currentUser is null
+    }
+  }, [user]);
+
   useEffect(() => {
     if (user) {
       getData();
     } else {
-      return;
+      setIsPremium(false); // Set to false when currentUser is null
     }
   }, [user, getData]);
 
-  const [showColorOptions, setShowColorOptions] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
+  useEffect(() => {
+    updateIsPremium();
+  }, [user, updateIsPremium]);
+
+
   // Daftar warna dan gambar latar belakang
   const colors = [
     {
@@ -116,6 +138,10 @@ const BackgroundColorChanger = () => {
       document.body.className = color.color;
     }
     Cookies.set("selectedColor", color.color, { expires: 365 }); // Simpan pilihan dalam cookie, dengan masa berlaku 365 hari
+    // Save to local storage if the user is not logged in
+    if (!user) {
+      localStorage.setItem("selectedColor", color.color);
+    }
     setShowColorOptions(false);
   };
 
@@ -126,20 +152,17 @@ const BackgroundColorChanger = () => {
 
   // Mengambil warna latar belakang yang disimpan dalam cookie saat komponen dimuat
   useEffect(() => {
-    const savedColor = Cookies.get("selectedColor");
+    const savedColor = user ? Cookies.get("selectedColor") : localStorage.getItem("selectedColor");
     if (savedColor) {
-      // Memperbarui state latar belakang
       setBackgroundColor(savedColor);
       if (savedColor.startsWith("url(")) {
-        // Jika background yang disimpan adalah gambar
         document.body.style.backgroundImage = savedColor;
       } else {
-        // Jika background yang disimpan adalah warna
         document.body.style.backgroundImage = "";
         document.body.className = savedColor;
       }
     }
-  }, []);
+  }, [user]);
 
   return (
     <div className="relative">

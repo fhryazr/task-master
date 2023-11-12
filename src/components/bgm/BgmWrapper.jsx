@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useCallback } from "react";
 import Bgm from "./Bgm";
 import Cookies from "js-cookie";
 import { AuthContext } from "../../context/AuthContext";
@@ -81,9 +81,29 @@ const BgmWrapper = () => {
     if (user) {
       getData();
     } else {
-      return;
+      setIsPremium(false);
     }
-  }, []);
+  }, [user]);
+
+  const updateIsPremium = useCallback(async () => {
+    if (user) {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setIsPremium(userSnap.data().status === "premium");
+        }
+      } catch (error) {
+        console.error("Error updating isPremium:", error);
+      }
+    } else {
+      setIsPremium(false); // Set to false when currentUser is null
+    }
+  }, [user]);
+
+  useEffect(() => {
+    updateIsPremium();
+  }, [user, updateIsPremium]);
 
   const handleModeChange = (mode) => {
     setCurrentMode(mode);
