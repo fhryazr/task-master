@@ -16,39 +16,18 @@ const data = {
     },
     {
       title: "Voice Command apa saja yang tersedia?",
-      content: `Voice Command yang tersedia pada website TaskMaster ini yaitu : "mulai waktu",
-      "start timer",
-      "mulai timer",
-      "jalankan waktu",
-      "jalankan timer","pause timer",
-      "paus timer",
-      "jeda waktu",
-      "jeda timer",
-      "tunda waktu",
-      "berhenti sejenak",
-      "berhenti sebentar",
-      "jeda sementara",
-      "tahan waktu","reset timer",
-      "reset waktu",
-      "riset timer",
-      "riset waktu",
-      "nolkan waktu",
-      "cukup", "setel ulang",
-      "mulai dari awal",
-      "ulang dari awal",
-      "ulangi",
-      "restart", "buatkan tugas",
-      "buatkan tas",
-      "buatkan task",
-      "tambahkan tugas",
-      "tambahkan tas",
-      "tambahkan task",
-      "buat tugas",
-      "buat tas",
-      "buat task",
-      "tambah tugas",
-      "tambah tas",
-      "tambah task",`,
+      content: `Voice Command yang tersedia pada website TaskMaster ini yaitu :
+      <ul>
+        <li>"mulai waktu"</li>
+        <li>"pause timer"</li>
+        <li>"jeda timer"</li>
+        <li>"reset timer"</li>
+        <li>"restart"</li>
+        <li>"buatkan tugas ..."</li>
+        <li>"buatkan task ..."</li>
+        <li>"tambahkan tugas ..."</li>
+        <li>"tambahkan task ..."</li>
+      </ul>`,
     },
   ],
 };

@@ -75,8 +75,8 @@ const BackgroundColorChanger = () => {
       color: "bg-gradient-to-tr from-gray-800 via-gray-600 to-gray-400",
     },
     {
-      label: "url('/bg-ruang-kelas.png')",
-      color: "url('/bg-ruang-kelas.png')",
+      label: "url('/bg-ruang-kelas.jpg')",
+      color: "url('/bg-ruang-kelas.jpg')",
     },
     {
       label: "url('/work.jpg')",
@@ -109,6 +109,7 @@ const BackgroundColorChanger = () => {
       }
       // Jika background yang dipilih adalah gambar
       document.body.style.backgroundImage = color.color;
+      // document.getElementById("top").style.backgroundImage = color.color
     } else {
       // Jika background yang dipilih adalah warna
       document.body.style.backgroundImage = "";
@@ -150,7 +151,7 @@ const BackgroundColorChanger = () => {
       </button>
       {showColorOptions && (
         <div className="absolute right-0 top-10">
-          <div className="bg-white p-2 rounded-lg shadow-md grid grid-cols-5 space-x-2 w-[20vw] items-center">
+          <div className="bg-white p-3 rounded-lg shadow-md grid grid-cols-5 w-[22vw] items-center">
             {colors.map((color, index) => (
               <div
                 key={index}

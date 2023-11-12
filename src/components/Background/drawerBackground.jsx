@@ -73,8 +73,8 @@ function DrawerBackground() {
       color: "bg-gradient-to-tr from-gray-800 via-gray-600 to-gray-400",
     },
     {
-      label: "url('/bg-ruang-kelas.png')",
-      color: "url('/bg-ruang-kelas.png')",
+      label: "url('/bg-ruang-kelas.jpg')",
+      color: "url('/bg-ruang-kelas.jpg')",
     },
     {
       label: "url('/work.jpg')",

@@ -16,12 +16,10 @@ const SubscriptionModal = ({ isOpen, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-4xl font-bold my-5">Premium</div>
-        <ul className="text-left list-none p-0">
-          <li className="mb-2 text-gray-800">Enjoy our Background</li>
-          <li className="mb-2 text-gray-800">Enjoy our Ambient</li>
-          <li className="mb-2 text-gray-800">Enjoy more Voice Command </li>
-          <li className="mb-2 text-gray-800">Premium support: 6 months</li>
-          <li className="mb-2 text-gray-800">Free updates: 6 months</li>
+        <ul className="text-left list-none px-1">Unlocked Premium Features
+          <li className="mb-2 text-gray-800"> - Premiumn Background</li>
+          <li className="mb-2 text-gray-800"> - Premium Ambient</li>
+          <li className="mb-2 text-gray-800"> - Voice Command</li>
         </ul>
         <button
           onClick={onClose}
