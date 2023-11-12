@@ -1,11 +1,22 @@
 /* eslint-disable react/prop-types */
 import { useState, useContext, useEffect } from "react";
-import { TranscriptionContext } from "../../context/TranscriptionContext"
+import { TranscriptionContext } from "../../context/TranscriptionContext";
+import { toast, ToastContainer } from "react-toastify";
 
 export const TodoForm = ({ addTodo, todos }) => {
   const [todoValue, setTodoValue] = useState("");
   const [taskValue, setTaskValue] = useState([todos]);
-  const {commandScript} = useContext(TranscriptionContext);
+  const { commandScript } = useContext(TranscriptionContext);
+  const notifyError = (message) => {
+    toast.error(message, {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: false,
+      draggable: true,
+    });
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -16,8 +27,8 @@ export const TodoForm = ({ addTodo, todos }) => {
       setTodoValue("");
       setTaskValue([...taskValue, trimmedValue]);
     } else {
-      alert(`Task ${todoValue} is already exist`)// Menampilkan pesan kesalahan
-      setTodoValue('');
+      alert(`Task ${todoValue} is already exist`); // Menampilkan pesan kesalahan
+      setTodoValue("");
     }
   };
 
@@ -38,7 +49,7 @@ export const TodoForm = ({ addTodo, todos }) => {
 
   useEffect(() => {
     const lowerCommand = commandScript.toLowerCase();
-  
+
     // Loop melalui array keywordAdd
     for (const key of keywordAdd) {
       if (lowerCommand.includes(key)) {
@@ -46,7 +57,7 @@ export const TodoForm = ({ addTodo, todos }) => {
         const startIndex = lowerCommand.indexOf(key);
         // Ambil bagian transkrip setelah kata kunci
         let todoText = lowerCommand.substring(startIndex + key.length).trim();
-        todoText = todoText.replace(/\.$/, '');
+        todoText = todoText.replace(/\.$/, "");
         // Periksa jika todoText memiliki isi (tidak hanya spasi)
         if (todoText) {
           // Panggil addTodo dengan todoText
@@ -55,39 +66,42 @@ export const TodoForm = ({ addTodo, todos }) => {
             setTodoValue("");
             setTaskValue([...taskValue, todoText]);
           } else {
-            setTodoValue('');
+            setTodoValue("");
+            notifyError(`Task ${todoText} is already exist`);
           }
         }
         break; // Keluar dari loop setelah menemukan kata kunci pertama
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [commandScript, addTodo]);
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commandScript]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="TodoForm flex flex-col items-center w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
-      <div className="w-full">
-        {/* form input untuk menambahkan tugas */}
-        <input
-          type="text"
-          value={todoValue}
-          onChange={(e) => setTodoValue(e.target.value)}
-          className="todo-input w-full rounded-lg px-2 py-1 h-11 sm:px-8"
-          placeholder="Create a new task"
-        />
-      </div>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="TodoForm flex flex-col items-center w-full gap-4 mb-4 drop-shadow-lg sm:flex-row">
+        <div className="w-full">
+          {/* form input untuk menambahkan tugas */}
+          <input
+            type="text"
+            value={todoValue}
+            onChange={(e) => setTodoValue(e.target.value)}
+            className="todo-input w-full rounded-lg px-2 py-1 h-11 sm:px-8"
+            placeholder="Create a new task"
+          />
+        </div>
 
-      {/* Button menambahkan tugas */}
-      <button
-        type="submit"
-        className="todo-btn w-full md:w-[8vw] lg:w-[5vw] xl:w-[4vw] py-1 h-11 bg-purple-900 text-white rounded-lg">
-        {/* Tampilan tombol menyesuaikan dengan lebar layar */}
-        <span className="inline text-md sm:hidden">Add Task</span>
-        <span className="hidden sm:inline text-3xl">+</span>
-      </button>
-    </form>
+        {/* Button menambahkan tugas */}
+        <button
+          type="submit"
+          className="todo-btn w-full md:w-[8vw] lg:w-[5vw] xl:w-[4vw] py-1 h-11 bg-purple-900 text-white rounded-lg">
+          {/* Tampilan tombol menyesuaikan dengan lebar layar */}
+          <span className="inline text-md sm:hidden">Add Task</span>
+          <span className="hidden sm:inline text-3xl">+</span>
+        </button>
+      </form>
+      <ToastContainer />
+    </>
   );
 };
