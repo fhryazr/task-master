@@ -43,6 +43,7 @@ const Bgm = ({ songs, isPremium }) => {
       const audio = audioRefs.current[index];
       audio.src = songs[index].waveType;
       audio.volume = songVolumes[index] / MAX;
+      audio.loop = true;
       audio.play();
       setCurrentSongIndex(index);
     }

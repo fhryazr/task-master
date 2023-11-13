@@ -241,31 +241,33 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   };
 
   const saveTimeFocusData = async (param) => {
-    const userId = param.uid;
-    const focusEndTime = new Date().getTime();
-    const focusTime = focusEndTime - focusStartTime;
-    const formattedTime = formatTime2(focusTime);
-    const currentDate = new Date();
-    const formattedDate = format(currentDate, "MM/dd/yyyy");
+    if (param && param.uid) {
 
-    // Mengambil data dari Cookies
-    const storedFocusTimeCookies = Cookies.get(`stats-${userId}`);
-    let focusTimeStorageCookies = [];
-
-    if (storedFocusTimeCookies) {
-      focusTimeStorageCookies = JSON.parse(storedFocusTimeCookies);
-    }
-
-    // Menambahkan data waktu fokus baru ke array objek
-    focusTimeStorageCookies.push({ day: formattedDate, waktu: formattedTime });
-
-    // Menyimpan data ke Cookies
-    Cookies.set(`stats-${userId}`, JSON.stringify(focusTimeStorageCookies), {
-      expires: 365,
-    });
-
-    try {
-      const userRef = doc(db, "users", userId);
+      const userId = param.uid;
+      const focusEndTime = new Date().getTime();
+      const focusTime = focusEndTime - focusStartTime;
+      const formattedTime = formatTime2(focusTime);
+      const currentDate = new Date();
+      const formattedDate = format(currentDate, "MM/dd/yyyy");
+      
+      // Mengambil data dari Cookies
+      const storedFocusTimeCookies = Cookies.get(`stats-${userId}`);
+      let focusTimeStorageCookies = [];
+      
+      if (storedFocusTimeCookies) {
+        focusTimeStorageCookies = JSON.parse(storedFocusTimeCookies);
+      }
+      
+      // Menambahkan data waktu fokus baru ke array objek
+      focusTimeStorageCookies.push({ day: formattedDate, waktu: formattedTime });
+      
+      // Menyimpan data ke Cookies
+      Cookies.set(`stats-${userId}`, JSON.stringify(focusTimeStorageCookies), {
+        expires: 365,
+      });
+      
+      try {
+        const userRef = doc(db, "users", userId);
       const userDocSnapshot = await getDoc(userRef);
 
       if (userDocSnapshot.exists()) {
@@ -285,7 +287,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
         // Create an empty user document
         const newUserDocRef = doc(db, "users", userId);
         await setDoc(newUserDocRef, {});
-
+        
         // Create "focusStats" collection and add the data
         const focusStatsRef = collection(newUserDocRef, "focusStats");
         await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
@@ -293,6 +295,10 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
     } catch (err) {
       console.log(err);
     }
+  } else { 
+    return
+  }
+
   };
 
   // const [totalFocusTime, setTotalFocusTime] = useState(0);
