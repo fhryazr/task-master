@@ -70,22 +70,54 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   }, [mode, settings]);
 
   useEffect(() => {
-    if (isActive) {
-      const intervalId = setInterval(() => {
+    let isMounted = true;
+    let currentDuration = initialDuration;
+  
+    const startCountdown = () => {
+      if (isMounted) {
         setSeconds((prevSeconds) => {
-          if (prevSeconds === 0) {
-            // Timer selesai
-            clearInterval(intervalId);
+          if (prevSeconds <= 0) {
             setIsActive(false);
-            return initialDuration; // Kembali ke nilai awal saat timer habis
+            return currentDuration;
           }
-          return prevSeconds - 1;
+          return Math.max(0, prevSeconds - 1);
         });
-      }, 1000);
-
-      return () => clearInterval(intervalId); // Membersihkan interval saat komponen dilepas
+  
+        if (isActive && currentDuration > 0) {
+          setTimeout(startCountdown, 1000);
+        } else if (isActive && currentDuration === 0) {
+          onTimerComplete();
+          switch (mode) {
+            case "focus":
+              notify("Focus session completed!");
+              if (mode === "focus") {
+                saveTimeFocusData(user);
+                setFocusStartTime(null);
+              }
+              break;
+            case "shortBreak":
+              notify("Short break completed!,\nLet's Focus Again");
+              break;
+            case "longBreak":
+              notify("Long break completed!,\nLet's Focus Again");
+              break;
+            default:
+              break;
+          }
+        }
+      }
+    };
+  
+    if (isActive) {
+      startCountdown();
     }
-  }, [isActive, initialDuration, mode]);
+  
+    return () => {
+      isMounted = false;
+    };
+  }, [isActive, initialDuration]);
+  
+
 
   useEffect(() => {
     if (isActive && seconds === 0) {

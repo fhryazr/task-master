@@ -16,14 +16,14 @@ const BgmWrapper = () => {
 
   const songs = [
     {
-      title: "Ocean",
-      waveType: "Ocean.mp3",
+      title: "Fire Crackling",
+      waveType: "FireCrackling.m4a",
       imageUrl: "/CalmOceanWaves.png",
       premium: false,
     },
     {
-      title: "Fire Crackling",
-      waveType: "FireCrackling.m4a",
+      title: "Ocean",
+      waveType: "Ocean.mp3",
       imageUrl: "/CalmOceanWaves.png",
       premium: false,
     },
