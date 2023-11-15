@@ -106,6 +106,7 @@ function Login() {
             username: slicingEmail[1],
             email: result.user.email,
             roles: "user",
+            status: "free",
             img: result.user.photoURL,
           };
 

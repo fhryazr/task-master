@@ -13,25 +13,27 @@ function HomePage() {
   return (
     <>
       <div className="App container">
-        <div className="flex justify-center w-full px-2 z-50">
-          <div className="hidden lg:inline-block lg:w-full">
-            <Navbar />
-          </div>
-          <div className="w-full lg:hidden">
-            <TestNavbar />
-          </div>
-        </div>
         <div className="flex flex-col items-center">
-          <div className="Top h-[125vh] flex flex-col justify-center items-center mb-2 pt-16 md:h-[120vh] lg:h-[100vh]">
-            <div className="flex flex-col justify-center items-center w-full gap-5 md:gap-10 mb-8 mt-[-100px] lg:flex-row">
-              <TimerWrapper />
-              <BgmWrapper />
+          <div className="lg:h-[100vh]">
+            <div className="flex justify-center w-full px-2 md:px-8 z-50 mb-12 md:mb-10 lg:mb-0">
+              <div className="hidden lg:inline-block lg:w-full">
+                <Navbar />
+              </div>
+              <div className="w-full lg:hidden">
+                <TestNavbar />
+              </div>
             </div>
-            <TodoWrapperLocalStorage />
-          </div>
-          <div className="flex justify-end sticky bottom-0 w-screen p-5 px-8">
-            <div>
-              <VoiceCommand />
+            <div className="Top h-full flex flex-col justify-center items-center mb-2 pt-16">
+              <div className="flex flex-col justify-center items-center w-full gap-5 md:gap-10 mb-8 mt-[-100px] lg:flex-row">
+                <TimerWrapper />
+                <BgmWrapper />
+              </div>
+              <TodoWrapperLocalStorage />
+            </div>
+            <div className="flex justify-end sticky bottom-0 w-screen p-5 px-8">
+              <div>
+                <VoiceCommand />
+              </div>
             </div>
           </div>
           <div className="Bottom bg-white w-[100vw] flex flex-col items-center gap-5 ">

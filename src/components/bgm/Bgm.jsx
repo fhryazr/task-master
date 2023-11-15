@@ -11,6 +11,7 @@ const Bgm = ({ songs, isPremium }) => {
   const [currentSongIndex, setCurrentSongIndex] = useState(null);
   const [songVolumes, setSongVolumes] = useState(songs.map(() => MAX));
   const audioRefs = useRef(songs.map(() => new Audio()));
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const notifyError = (message) => {
     toast.error(message, {
@@ -28,24 +29,42 @@ const Bgm = ({ songs, isPremium }) => {
       notifyError("This Ambient is only available for premium users");
       return;
     }
-  
-    if (currentSongIndex !== null) {
-      // Pause and reset the previously playing audio
-      audioRefs.current[currentSongIndex].pause();
-      audioRefs.current[currentSongIndex].currentTime = 0;
-    }
-  
+
+    const audio = audioRefs.current[index];
+
     if (currentSongIndex === index) {
-      // If the same song is clicked again, stop playing
-      setCurrentSongIndex(null);
+      // If the same song is clicked again, toggle play/pause
+      if (audio.paused) {
+        // If paused, resume from the saved currentTime
+        audio.play().then(() => {
+          if (audio.dataset.currentTime) {
+            audio.currentTime = audio.dataset.currentTime;
+          }
+        });
+        setIsPlaying(true);
+      } else {
+        // If playing, pause and save the currentTime
+        audio.pause();
+        audio.dataset.currentTime = audio.currentTime;
+        setIsPlaying(false);
+      }
     } else {
       // Play the selected song
-      const audio = audioRefs.current[index];
+      if (currentSongIndex !== null) {
+        // Pause and reset the previously playing audio
+        const currentAudio = audioRefs.current[currentSongIndex];
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        setIsPlaying(false);
+      }
+
       audio.src = songs[index].waveType;
       audio.volume = songVolumes[index] / MAX;
       audio.loop = true;
-      audio.play();
-      setCurrentSongIndex(index);
+      audio.play().then(() => {
+        setCurrentSongIndex(index);
+        setIsPlaying(true);
+      });
     }
   };
 
@@ -83,7 +102,7 @@ const Bgm = ({ songs, isPremium }) => {
                   onClick={() => toggleAudio(index)}
                   className="absolute right-[1px] top-1/2 -translate-y-1/2 w-12 h-12 p-2 text-white rounded-full"
                 >
-                  {currentSongIndex !== null && currentSongIndex === index ? (
+                  {isPlaying && currentSongIndex !== null && currentSongIndex === index ? (
                     <PauseIcon className="h-8 w-8" aria-hidden="true" />
                   ) : (
                     <PlayIcon className="h-8 w-8" aria-hidden="true" />
