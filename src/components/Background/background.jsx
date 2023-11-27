@@ -173,8 +173,8 @@ const BackgroundColorChanger = () => {
         Background
       </button>
       {showColorOptions && (
-        <div className="absolute right-0 top-10">
-          <div className="bg-white pl-[2.5rem] pt-2 pb-1 rounded-lg shadow-md grid grid-cols-5 w-[22vw] items-center">
+        <div className="absolute right-0 top-10 z-[99]">
+          <div className="bg-white p-4 pb-1 rounded-lg shadow-md grid grid-cols-5 w-[22vw] items-center z-50">
             {colors.map((color, index) => (
               <div
                 key={index}
