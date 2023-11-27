@@ -134,7 +134,7 @@ function Login() {
   };
 
   return (
-    <div className="Login">
+    <div className="Login px-3 md:px-0">
       <div className="login-container">
         <h1 className="judul font-bold text-xl">Login</h1>
         <form onSubmit={handleSubmit}>

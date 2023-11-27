@@ -162,3 +162,26 @@ input {
   /* Gaya input email dengan kesalahan (border merah misalnya) */
   border-color: 1px solid red;
 }
+
+@media screen and (max-width: 425px) {
+  .login-container {
+    width: 90vw;
+    padding: 5%;
+  }
+
+  .login-tab {
+    padding: 5px 10px;
+  }
+
+  .or::before,
+  .or::after {
+    content: "";
+    display: inline-block;
+    width: 30vw;
+    height: 1px;
+    background-color: #ccc; /* Warna garis, sesuaikan sesuai kebutuhan Anda */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

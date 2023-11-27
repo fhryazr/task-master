@@ -54,7 +54,8 @@ function ProfilePopup({logOut}) {
     fetchUserProfileData();
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = async (event) => {
+    event.preventDefault();
     logOut();
     setShowProfile(false);
     setIsLoggedIn(false);

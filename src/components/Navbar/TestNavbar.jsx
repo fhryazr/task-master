@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback, useRef } from "react";
 import { createPopper } from "@popperjs/core";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 import ProfilePopup from "./profil";
 import StatsModal from "./StatsModal";
 import BackgroundColorChanger from "../Background/background";
@@ -56,9 +56,10 @@ function TestNavbar() {
   };
 
   const handleLogout = async () => {
-    const auth = getAuth();
-    auth.signOut();
+    // const auth = getAuth();
+    // auth.signOut();
     dispatch({ type: "LOGOUT" });
+    setIsLoggedIn(false);
     localStorage.removeItem("Pembayaran")
     setIsPremium(false);
   }
@@ -78,15 +79,15 @@ function TestNavbar() {
       });
     }
 
-    const auth = getAuth();
-    auth.onAuthStateChanged((user) => {
+    // const auth = getAuth();
+    // auth.onAuthStateChanged((user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);
       }
-    });
-  }, [showPopover]);
+    // });
+  }, [showPopover, user]);
 
   const handlePopoverClick = () => {
     setShowPopover(!showPopover);

@@ -61,7 +61,16 @@ const App = () => {
           }
         />
         <Route path="register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            currentUser ? (
+              <Navigate to="/" />
+            ) : (
+              <Login />
+            )
+          }
+        />
         <Route path="/reset" element={<ForgotPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
