@@ -37,39 +37,80 @@ function Login() {
     });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const email = e.target.email.value;
+  //   const password = e.target.password.value;
+
+  //   try {
+  //     const userCredential = await signInWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+
+  //     if (userCredential.user) {
+  //       const { uid, displayName, email } = userCredential.user;
+
+  //       dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
+
+  //       const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+  //       const userData = userDoc.data();
+  //       if (userData && userData.roles === "admin") {
+  //         navigate("/admin");
+  //       } else if (userCredential.user.emailVerified === true) {
+  //         navigate("/");
+  //       }
+  //     } else {
+  //       notifyFailed("Please verify your email before logging in.");
+  //     }
+  //   } catch (error) {
+  //     notifyError("Invalid email or passord");
+  //     console.error(error);
+  //     setLogin(true);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-
+  
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-
+  
       if (userCredential.user) {
         const { uid, displayName, email } = userCredential.user;
-
-        dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
-
+  
         const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
         const userData = userDoc.data();
-        if (userData && userData.roles === "admin") {
-          navigate("/admin");
-        } else if (userCredential.user.emailVerified) {
-          navigate("/");
+  
+        if (!userCredential.user.emailVerified) {
+          notifyFailed("Please verify your email before logging in.");
+          await auth.signOut(); // Logout pengguna yang belum terverifikasi
+        } else {
+          dispatch({ type: "LOGIN", payload: { uid, displayName, email } });
+  
+          if (userData && userData.roles === "admin") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
         }
       } else {
         notifyFailed("Please verify your email before logging in.");
       }
     } catch (error) {
-      notifyError("Invalid email or passord");
+      notifyError("Invalid email or password");
       console.error(error);
       setLogin(true);
     }
   };
+  
 
   const handleReset = () => {
     navigate("/reset");
