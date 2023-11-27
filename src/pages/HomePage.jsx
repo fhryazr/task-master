@@ -30,12 +30,12 @@ function HomePage() {
               </div>
               <TodoWrapperLocalStorage />
             </div>
+          </div>
             <div className="flex justify-end sticky bottom-0 w-screen p-5 px-8">
               <div>
                 <VoiceCommand />
               </div>
             </div>
-          </div>
           <div className="Bottom bg-white w-[100vw] flex flex-col items-center gap-5 ">
             <div className="" id="about-us">
               <AboutUs />

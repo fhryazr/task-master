@@ -129,7 +129,7 @@ const BgmWrapper = () => {
       <div className="bg-white h-[10rem] md:h-[12rem] p-2 rounded-lg">
         <div className="bg-white max-h-[9rem] md:max-h-[11rem] overflow-y-auto rounded-lg hover:overflow-y-auto hover:rounded-lg">
           {currentMode === "bgm" ? (
-            <Bgm songs={songs} isPremium={isPremium} />
+            <Bgm songs={songs} isPremium={isPremium} user={user} />
           ) : null}
         </div>
       </div>

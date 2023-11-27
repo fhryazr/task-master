@@ -19,7 +19,7 @@ const SubscriptionModal = ({ isOpen, onClose }) => {
         <ul className="text-left list-none px-1">Unlocked Premium Features
           <li className="mb-2 text-gray-800"> - Premiumn Background</li>
           <li className="mb-2 text-gray-800"> - Premium Ambient</li>
-          <li className="mb-2 text-gray-800"> - Voice Command</li>
+          {/* <li className="mb-2 text-gray-800"> - Voice Command</li> */}
         </ul>
         <button
           onClick={onClose}

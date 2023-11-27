@@ -24,7 +24,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   const user = currentUser;
 
   // NOTIFIKASI
-  const notifySound = new Audio('timer_notif.mp3');
+  const notifySound = new Audio("timer_notif.mp3");
   const notify = (message) => {
     notifySound.play();
     toast.success(message, {
@@ -72,7 +72,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   useEffect(() => {
     let isMounted = true;
     let currentDuration = initialDuration;
-  
+
     const startCountdown = () => {
       if (isMounted) {
         setSeconds((prevSeconds) => {
@@ -82,7 +82,7 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
           }
           return Math.max(0, prevSeconds - 1);
         });
-  
+
         if (isActive && currentDuration > 0) {
           setTimeout(startCountdown, 1000);
         } else if (isActive && currentDuration === 0) {
@@ -107,17 +107,15 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
         }
       }
     };
-  
+
     if (isActive) {
       startCountdown();
     }
-  
+
     return () => {
       isMounted = false;
     };
   }, [isActive, initialDuration]);
-  
-
 
   useEffect(() => {
     if (isActive && seconds === 0) {
@@ -191,15 +189,15 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
     "riset timer",
     "riset waktu",
     "nolkan waktu",
-    "cukup"
+    "cukup",
   ];
   const keywordCombine = [
     "setel ulang",
     "mulai dari awal",
     "ulang dari awal",
     "ulangi",
-    "restart"
-  ]
+    "restart",
+  ];
 
   const playSound = (soundFile) => {
     const audio = new Audio(soundFile);
@@ -209,23 +207,22 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
   useEffect(() => {
     const lowerCommand = commandScript.toLowerCase();
     if (keywordStart.some((key) => lowerCommand.includes(key))) {
-      playSound('notif-2.mp3')
+      playSound("notif-2.mp3");
       setTimeout(() => {
         startTimer();
       }, 1000);
-      
     } else if (keywordPause.some((key) => lowerCommand.includes(key))) {
-      playSound('notif-2.mp3')
+      playSound("notif-2.mp3");
       setTimeout(() => {
         pauseTimer();
       }, 1000);
     } else if (keywordReset.some((key) => lowerCommand.includes(key))) {
-      playSound('notif-2.mp3')
+      playSound("notif-2.mp3");
       setTimeout(() => {
         resetTimer();
       }, 1000);
     } else if (keywordCombine.some((key) => lowerCommand.includes(key))) {
-      playSound('notif-2.mp3')
+      playSound("notif-2.mp3");
       setTimeout(() => {
         resetTimer();
         startTimer();
@@ -242,63 +239,69 @@ const Timer = ({ mode, settings, onTimerComplete }) => {
 
   const saveTimeFocusData = async (param) => {
     if (param && param.uid) {
-
       const userId = param.uid;
       const focusEndTime = new Date().getTime();
       const focusTime = focusEndTime - focusStartTime;
       const formattedTime = formatTime2(focusTime);
       const currentDate = new Date();
       const formattedDate = format(currentDate, "MM/dd/yyyy");
-      
+
       // Mengambil data dari Cookies
       const storedFocusTimeCookies = Cookies.get(`stats-${userId}`);
       let focusTimeStorageCookies = [];
-      
+
       if (storedFocusTimeCookies) {
         focusTimeStorageCookies = JSON.parse(storedFocusTimeCookies);
       }
-      
+
       // Menambahkan data waktu fokus baru ke array objek
-      focusTimeStorageCookies.push({ day: formattedDate, waktu: formattedTime });
-      
+      focusTimeStorageCookies.push({
+        day: formattedDate,
+        waktu: formattedTime,
+      });
+
       // Menyimpan data ke Cookies
       Cookies.set(`stats-${userId}`, JSON.stringify(focusTimeStorageCookies), {
         expires: 365,
       });
-      
+
       try {
         const userRef = doc(db, "users", userId);
-      const userDocSnapshot = await getDoc(userRef);
+        const userDocSnapshot = await getDoc(userRef);
 
-      if (userDocSnapshot.exists()) {
-        const focusStatsRef = collection(userRef, "focusStats");
-        // Check if "focusStats" already exists
-        const focusStatsSnapshot = await getDocs(focusStatsRef);
+        if (userDocSnapshot.exists()) {
+          const focusStatsRef = collection(userRef, "focusStats");
+          // Check if "focusStats" already exists
+          const focusStatsSnapshot = await getDocs(focusStatsRef);
 
-        if (focusStatsSnapshot.empty) {
-          // If it doesn't exist, create a new document
-          await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
+          if (focusStatsSnapshot.empty) {
+            // If it doesn't exist, create a new document
+            await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
+          } else {
+            // If it exists, update the existing document
+            const focusStatsDoc = focusStatsSnapshot.docs[0];
+            await setDoc(focusStatsDoc.ref, { data: focusTimeStorageCookies });
+
+            // const focusStatsDoc = focusStatsSnapshot.docs[0];
+            // const currentData = focusStatsDoc.data().data; // Fetch current data
+            // const updatedData = [...currentData, ...focusTimeStorageCookies]; // Update the array
+            // await setDoc(focusStatsDoc.ref, { data: updatedData });
+          }
         } else {
-          // If it exists, update the existing document
-          const focusStatsDoc = focusStatsSnapshot.docs[0];
-          await setDoc(focusStatsDoc.ref, { data: focusTimeStorageCookies });
-        }
-      } else {
-        // Create an empty user document
-        const newUserDocRef = doc(db, "users", userId);
-        await setDoc(newUserDocRef, {});
-        
-        // Create "focusStats" collection and add the data
-        const focusStatsRef = collection(newUserDocRef, "focusStats");
-        await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  } else { 
-    return
-  }
+          // Create an empty user document
+          const newUserDocRef = doc(db, "users", userId);
+          await setDoc(newUserDocRef, {});
 
+          // Create "focusStats" collection and add the data
+          const focusStatsRef = collection(newUserDocRef, "focusStats");
+          await addDoc(focusStatsRef, { data: focusTimeStorageCookies });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      return;
+    }
   };
 
   // const [totalFocusTime, setTotalFocusTime] = useState(0);

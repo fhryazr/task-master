@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone } from "@fortawesome/free-solid-svg-icons";
 import { TranscriptionContext } from "../../context/TranscriptionContext";
 import { ToastContainer, toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../config/FirebaseConfig";
 
 function VoiceCommand() {
   const [recognizing, setRecognizing] = useState(false);
@@ -30,16 +33,68 @@ function VoiceCommand() {
     });
   };
 
-  const toggleListening = useCallback(() => {
-    if (recognizing === true) {
-      recognition.stop();
-      console.log("mic mati");
-      setRecognizing(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+  const user = currentUser;
+
+  useEffect(() => {
+    // Check premium status when the component mounts
+    const getData = async () => {
+      const userId = user.uid;
+      try {
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.data().status === "premium") {
+          setIsPremium(true);
+        } else {
+          setIsPremium(false);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (user) {
+      getData();
     } else {
-      setRecognizing(true);
-      playSound("notif-1.mp3");
-      recognition.start();
-      console.log("mic nyala");
+      setIsPremium(false);
+    }
+  }, [user]);
+
+  const updateIsPremium = useCallback(async () => {
+    if (user) {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setIsPremium(userSnap.data().status === "premium");
+        }
+      } catch (error) {
+        console.error("Error updating isPremium:", error);
+      }
+    } else {
+      setIsPremium(false); // Set to false when currentUser is null
+    }
+  }, [user]);
+
+  useEffect(() => {
+    updateIsPremium();
+  }, [user, updateIsPremium]);
+
+  const toggleListening = useCallback(() => {
+    if (user) {
+      if (recognizing === true) {
+        recognition.stop();
+        console.log("mic mati");
+        setRecognizing(false);
+      } else {
+        setRecognizing(true);
+        playSound("notif-1.mp3");
+        recognition.start();
+        console.log("mic nyala");
+      }
+    } else {
+      notify('Login untuk menggunakan Voice Commands');
     }
   }, [recognizing, recognition]);
 

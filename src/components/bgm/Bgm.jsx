@@ -3,9 +3,8 @@ import { useState, useRef } from "react";
 import { SpeakerWaveIcon } from "@heroicons/react/24/outline";
 import { PlayIcon, PauseIcon } from "@heroicons/react/24/solid";
 import { toast, ToastContainer } from "react-toastify";
-// import { AuthContext } from "../../context/AuthContext";
 
-const Bgm = ({ songs, isPremium }) => {
+const Bgm = ({ songs, isPremium, user }) => {
   const MAX = 50;
 
   const [currentSongIndex, setCurrentSongIndex] = useState(null);
@@ -24,9 +23,21 @@ const Bgm = ({ songs, isPremium }) => {
     });
   };
 
+  const playSound = (soundFile) => {
+    const audio = new Audio(soundFile);
+    audio.play();
+  };
+
   const toggleAudio = (index) => {
-    if (songs[index].premium && !isPremium) {
-      notifyError("This Ambient is only available for premium users");
+    if (user) {
+      if (songs[index].premium && !isPremium) {
+        playSound("unknown.mp3");
+        notifyError("This Ambient is only available for premium users");
+        return;
+      }
+    } else {
+      playSound("unknown.mp3");
+      notifyError("Login untuk memutar BGM");
       return;
     }
 
@@ -73,13 +84,12 @@ const Bgm = ({ songs, isPremium }) => {
     const newSongVolumes = [...songVolumes];
     newSongVolumes[index] = Number(value);
     setSongVolumes(newSongVolumes);
-  
+
     if (currentSongIndex === index) {
       // Update the volume for the specific audio element
       audioRefs.current[index].volume = Number(value) / MAX;
     }
   };
-  
 
   return (
     <>
@@ -87,8 +97,7 @@ const Bgm = ({ songs, isPremium }) => {
         {songs.map((song, index) => (
           <div
             key={index}
-            className="bg-white w-full max-w-full flex flex-col rounded-lg b-4 mb-2 text-center shadow-md"
-          >
+            className="bg-white w-full max-w-full flex flex-col rounded-lg b-4 mb-2 text-center shadow-md">
             <div className="flex items-center gap-2 p-2">
               <div className="relative flex-shrink-0">
                 <img
@@ -100,9 +109,10 @@ const Bgm = ({ songs, isPremium }) => {
                 />
                 <button
                   onClick={() => toggleAudio(index)}
-                  className="absolute right-[1px] top-1/2 -translate-y-1/2 w-12 h-12 p-2 text-white rounded-full"
-                >
-                  {isPlaying && currentSongIndex !== null && currentSongIndex === index ? (
+                  className="absolute right-[1px] top-1/2 -translate-y-1/2 w-12 h-12 p-2 text-white rounded-full">
+                  {isPlaying &&
+                  currentSongIndex !== null &&
+                  currentSongIndex === index ? (
                     <PauseIcon className="h-8 w-8" aria-hidden="true" />
                   ) : (
                     <PlayIcon className="h-8 w-8" aria-hidden="true" />
@@ -121,8 +131,7 @@ const Bgm = ({ songs, isPremium }) => {
                           top: "50%",
                           left: "50%",
                           transform: "translate(-50%, -50%)",
-                        }}
-                      >
+                        }}>
                         🔒
                       </span>
                     )}
